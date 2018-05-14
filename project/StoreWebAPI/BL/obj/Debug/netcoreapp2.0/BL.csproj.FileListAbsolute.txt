@@ -1,0 +1,12 @@
+D:\practice\first\project\StoreWebAPI\BL\bin\Debug\netcoreapp2.0\BL.deps.json
+D:\practice\first\project\StoreWebAPI\BL\bin\Debug\netcoreapp2.0\BL.dll
+D:\practice\first\project\StoreWebAPI\BL\bin\Debug\netcoreapp2.0\BL.pdb
+D:\practice\first\project\StoreWebAPI\BL\bin\Debug\netcoreapp2.0\DAL.dll
+D:\practice\first\project\StoreWebAPI\BL\bin\Debug\netcoreapp2.0\DAL.pdb
+D:\practice\first\project\StoreWebAPI\BL\obj\Debug\netcoreapp2.0\BL.csprojAssemblyReference.cache
+D:\practice\first\project\StoreWebAPI\BL\obj\Debug\netcoreapp2.0\BL.csproj.CoreCompileInputs.cache
+D:\practice\first\project\StoreWebAPI\BL\obj\Debug\netcoreapp2.0\BL.AssemblyInfoInputs.cache
+D:\practice\first\project\StoreWebAPI\BL\obj\Debug\netcoreapp2.0\BL.AssemblyInfo.cs
+D:\practice\first\project\StoreWebAPI\BL\obj\Debug\netcoreapp2.0\BL.csproj.CopyComplete
+D:\practice\first\project\StoreWebAPI\BL\obj\Debug\netcoreapp2.0\BL.dll
+D:\practice\first\project\StoreWebAPI\BL\obj\Debug\netcoreapp2.0\BL.pdb
