@@ -9,3 +9,8 @@ D:\practice\first\project\StoreWebAPI\StoreWebAPI\obj\Debug\netcoreapp2.0\StoreW
 D:\practice\first\project\StoreWebAPI\StoreWebAPI\bin\Debug\netcoreapp2.0\StoreWebAPI.pdb
 D:\practice\first\project\StoreWebAPI\StoreWebAPI\obj\Debug\netcoreapp2.0\StoreWebAPI.dll
 D:\practice\first\project\StoreWebAPI\StoreWebAPI\obj\Debug\netcoreapp2.0\StoreWebAPI.pdb
+D:\practice\first\project\StoreWebAPI\StoreWebAPI\bin\Debug\netcoreapp2.0\BL.dll
+D:\practice\first\project\StoreWebAPI\StoreWebAPI\bin\Debug\netcoreapp2.0\DAL.dll
+D:\practice\first\project\StoreWebAPI\StoreWebAPI\bin\Debug\netcoreapp2.0\BL.pdb
+D:\practice\first\project\StoreWebAPI\StoreWebAPI\bin\Debug\netcoreapp2.0\DAL.pdb
+D:\practice\first\project\StoreWebAPI\StoreWebAPI\obj\Debug\netcoreapp2.0\StoreWebAPI.csproj.CopyComplete

@@ -1,24 +1,23 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
 using DAL.Entities;
 
-namespace DAL.Interfaces
-{
-    //доделать ..Async
+namespace DAL.Interfaces {
     public interface IRepository<TEntity> where TEntity : BaseEntity {
+        Task InsertAsync(TEntity item);
 
-        Task Create(TEntity item);
+        Task<TEntity> GetByIdAsync(long id);
 
-        Task<TEntity> GetById(int id);
+        Task<IQueryable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> predicate = null);
 
-        Task<IQueryable<TEntity>> GetAll(Expression<Func<TEntity, bool>> predicate = null);
+        Task RemoveAsync(TEntity item);
 
-        Task Remove(TEntity item);
+        Task UpdateAsync(TEntity item);
 
-        Task Update(TEntity item);
+        Task DeleteAsync(TEntity item);
+
+        Task SaveChangesAsync();
     }
 }
