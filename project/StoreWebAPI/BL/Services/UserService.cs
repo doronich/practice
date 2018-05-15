@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using BL.Interfaces;
 using DAL.Entities;
@@ -21,12 +24,16 @@ namespace BL.Services {
             return await this.m_userRepository.GetByIdAsync(id);
         }
 
-        public async Task<IEnumerable<User>> GetUsersAsync() {
-            return await this.m_userRepository.GetAllAsync();
+        public async Task<IEnumerable<User>> GetUsersAsync(Expression<Func<User, bool>> predicate = null) {
+            return predicate==null?await this.m_userRepository.GetAllAsync():await this.m_userRepository.GetAllAsync(predicate);
         }
 
         public async Task InsertUserAsync(User user) {
-            await this.m_userRepository.InsertAsync(user);
+            var ex = await this.m_userRepository.ExistAsync(u => u.Login == user.Login);
+            if (!ex) {
+                await this.m_userRepository.InsertAsync(user);
+            }
+            
         }
 
         public async Task UpdateUserAsync(User user) {

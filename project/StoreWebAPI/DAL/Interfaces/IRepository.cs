@@ -19,5 +19,7 @@ namespace DAL.Interfaces {
         Task DeleteAsync(TEntity item);
 
         Task SaveChangesAsync();
+
+        Task<bool> ExistAsync(Expression<Func<TEntity, bool>> predicate);
     }
 }

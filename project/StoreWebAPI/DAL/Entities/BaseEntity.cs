@@ -13,7 +13,7 @@ namespace DAL.Entities {
         [Required]
         public DateTime CreatedDate { get; set; }
 
-        public long? UpdatedBy { get; set; }
+        public string UpdatedBy { get; set; }
 
         public DateTime? UpdatedDate { get; set; }
     }

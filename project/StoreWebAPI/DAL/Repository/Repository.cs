@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 namespace DAL.Repository {
     public class Repository<TEntity> : IRepository<TEntity> where TEntity : BaseEntity {
         private readonly ApplicationContext m_context;
+
         private readonly DbSet<TEntity> m_dbSet;
         //private string errorMessage = string.Empty;
 
@@ -19,9 +20,7 @@ namespace DAL.Repository {
         }
 
         public async Task InsertAsync(TEntity item) {
-            if(item == null) {
-                throw new ArgumentNullException("item");
-            }
+            if(item == null) throw new ArgumentNullException("item");
             await this.m_dbSet.AddAsync(item);
             await this.m_context.SaveChangesAsync();
         }
@@ -33,29 +32,28 @@ namespace DAL.Repository {
         public async Task<TEntity> GetByIdAsync(long id) {
             return await this.m_dbSet.FindAsync(id);
         }
+        // ======================
+        public async Task<bool> ExistAsync(Expression<Func<TEntity, bool>> predicate) {
+            var temp = await this.m_dbSet.FirstOrDefaultAsync(predicate);
+            if(temp == null) return false;
+
+            return true;
+        }
 
         public async Task RemoveAsync(TEntity item) {
-            if (item == null)
-            {
-                throw new ArgumentNullException("item");
-            }
+            if(item == null) throw new ArgumentNullException("item");
 
             await Task.Run(() => this.m_dbSet.Remove(item));
         }
 
         public async Task UpdateAsync(TEntity item) {
-            if(item == null) {
-                throw new ArgumentNullException("item");
-            }
+            if(item == null) throw new ArgumentNullException("item");
             this.m_context.Entry(item).State = EntityState.Modified;
             await this.m_context.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(TEntity item) {
-            if (item == null)
-            {
-                throw new ArgumentNullException("item");
-            }
+            if(item == null) throw new ArgumentNullException("item");
 
             this.m_context.Remove(item);
             await this.m_context.SaveChangesAsync();
