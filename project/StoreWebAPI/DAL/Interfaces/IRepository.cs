@@ -6,19 +6,15 @@ using DAL.Entities;
 
 namespace DAL.Interfaces {
     public interface IRepository<TEntity> where TEntity : BaseEntity {
-        Task InsertAsync(TEntity item);
+        Task CreateAsync(TEntity item);
 
         Task<TEntity> GetByIdAsync(long id);
 
         Task<IQueryable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> predicate = null);
 
-        Task RemoveAsync(TEntity item);
-
         Task UpdateAsync(TEntity item);
 
         Task DeleteAsync(TEntity item);
-
-        Task SaveChangesAsync();
 
         Task<bool> ExistAsync(Expression<Func<TEntity, bool>> predicate);
     }

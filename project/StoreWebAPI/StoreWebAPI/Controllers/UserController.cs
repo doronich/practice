@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using BL.Interfaces;
-using DAL.Entities;
+using BL.ViewModels;
 using Microsoft.AspNetCore.Mvc;
-using StoreWebAPI.Models;
 
 namespace StoreWebAPI.Controllers {
     [Route("api")]
@@ -17,98 +15,74 @@ namespace StoreWebAPI.Controllers {
         }
 
         [HttpGet("User")]
-        public async Task<UserViewModel> GetUser(long id) {
+        public async Task<IActionResult> GetUser(long id) {
             UserViewModel user;
             try {
-                var temp = await this.m_userService.GetUserAsync(id);
-                user = new UserViewModel {
-                    FirstName = temp.Firstname,
-                    LastName = temp.Lastname,
-                    UserName = temp.Login,
-                    Email = temp.Email
-                };
+                user = await this.m_userService.GetUserAsync(id);
             } catch(Exception exception) {
-                return null;
+                return this.BadRequest(exception.Message);
             }
 
-            return user;
+            return this.Json(user);
         }
 
         [HttpGet("Users")]
-        public async Task<List<UserViewModel>> GetUsersAsync() {
-            var model = new List<UserViewModel>();
+        public async Task<IActionResult> GetUsersAsync() {
+            IList<UserViewModel> users;
 
-            var users = await this.m_userService.GetUsersAsync();
-            if(!users.Any()) return null;
             try {
-                users.ToList().ForEach(item => {
-                    var user = new UserViewModel {
-                        Id = item.Id,
-                        FirstName = item.Firstname,
-                        LastName = item.Lastname,
-                        UserName = item.Login,
-                        Email = item.Email,
-                        AddedDate = item.CreatedDate
-                    };
-                    model.Add(user);
-                });
+                users = await this.m_userService.GetUsersAsync();
             } catch(Exception exception) {
-                throw;
+                return this.BadRequest(exception.Message);
             }
 
-            return model;
+            return this.Json(users);
         }
 
         [HttpPost("Register")]
-        public async Task<IActionResult> RegisterUserAsync([FromBody] UserViewModel model) {
-            if(!this.ModelState.IsValid) return this.BadRequest();
-
-            var user = new User {
-                Login = model.UserName,
-                Password = model.Password,
-                Role = (int)UserRoles.User,
-                Email = model.Email,
-                Firstname = model.FirstName,
-                Lastname = model.LastName,
-                Active = true,
-                CreatedBy = "DM",
-                CreatedDate = DateTime.Now
-            };
+        public async Task<IActionResult> RegisterUserAsync([FromBody] RegisterUserViewModel model) {
+            if(!this.ModelState.IsValid) return this.BadRequest("!");
             try {
-                await this.m_userService.InsertUserAsync(user);
+                var token = await this.m_userService.InsertUserAsync(model);
+                return this.Ok(token);
             } catch(Exception exception) {
-                return this.BadRequest();
+                return this.BadRequest(exception.Message);
             }
-
-            if(user.Id > 0) return this.Ok();
-            return this.BadRequest();
         }
 
         [HttpPut("Update")]
-        public async Task<IActionResult> EditUserAsync([FromBody] UserViewModel model) {
+        public async Task<IActionResult> EditUserAsync([FromBody] UpdateUserViewModel model) {
             if(!this.ModelState.IsValid) return this.BadRequest();
-            var user = await this.m_userService.GetUserAsync(model.Id);
-            user.Email = model.Email ?? user.Email;
-            user.UpdatedDate = DateTime.Now;
-            user.UpdatedBy = "DM";
-            user.Firstname = model.FirstName ?? user.Firstname;
-            user.Lastname = model.LastName ?? user.Lastname;
-            await this.m_userService.UpdateUserAsync(user);
-
-            if(user.Id > 0) return this.Ok();
-
-            return this.BadRequest();
-        }
-
-        [HttpDelete("Delete")]
-        public async Task<IActionResult> DeleteUserAsync([FromForm] long id) {
             try {
-                await this.m_userService.DeleteUserAsync(id);
+                await this.m_userService.UpdateUserAsync(model);
             } catch(Exception exception) {
-                return this.BadRequest();
+                return this.BadRequest(exception.Message);
             }
 
             return this.Ok();
+        }
+
+        [HttpDelete("Delete")]
+        public async Task<IActionResult> DeleteUserAsync([FromBody] long id) {
+            try {
+                await this.m_userService.DeleteUserAsync(id);
+            } catch(Exception exception) {
+                return this.BadRequest(exception.Message);
+            }
+
+            return this.Ok();
+        }
+
+        [HttpPost("Token")]
+        public async Task<IActionResult> Token([FromBody] LoginUserViewModel model) {
+            if(!this.ModelState.IsValid) return this.BadRequest();
+
+            try {
+                var token = await this.m_userService.GetTokenAsync(model);
+                return this.Ok(token);
+            } catch(Exception exception) {
+                return this.BadRequest(exception.Message);
+            }
         }
     }
 }

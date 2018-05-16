@@ -1,19 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using DAL.Entities;
+using BL.ViewModels;
 
 namespace BL.Interfaces {
     public interface IUserService {
-        Task<IEnumerable<User>> GetUsersAsync(Expression<Func<User, bool>> predicate = null);
+        Task<IList<UserViewModel>> GetUsersAsync();
 
-        Task<User> GetUserAsync(long id);
+        Task<UserViewModel> GetUserAsync(long id);
 
-        Task InsertUserAsync(User user);
+        Task<string> InsertUserAsync(RegisterUserViewModel model);
 
-        Task UpdateUserAsync(User user);
+        Task UpdateUserAsync(UpdateUserViewModel model);
 
         Task DeleteUserAsync(long id);
+
+        Task<string> GetTokenAsync(LoginUserViewModel model);
     }
 }

@@ -6,10 +6,12 @@ namespace DAL.Entities {
         [Required]
         [Key]
         public long Id { get; set; }
+
         public bool Active { get; set; }
 
         [Required]
         public string CreatedBy { get; set; }
+
         [Required]
         public DateTime CreatedDate { get; set; }
 

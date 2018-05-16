@@ -1,4 +1,6 @@
+using System.Text;
 using BL.Interfaces;
+using BL.Options;
 using BL.Services;
 using DAL.Context;
 using DAL.Interfaces;
@@ -21,6 +23,7 @@ namespace StoreWebAPI {
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services) {
+            services.AddOptions();
             //DB
             services.AddDbContext<ApplicationContext>(
                 options => options.UseSqlServer(this.Configuration.GetConnectionString("DefaultConnection"))
@@ -28,27 +31,31 @@ namespace StoreWebAPI {
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddTransient<IUserService, UserService>();
 
+            services.Configure<AuthSettings>(this.Configuration.GetSection("AuthOptions"));
+
             //Auth
-            //services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            //        .AddJwtBearer(options => {
-            //            options.RequireHttpsMetadata = false;
-            //            options.TokenValidationParameters = new TokenValidationParameters {
-            //                // укзывает, будет ли валидироваться издатель при валидации токена
-            //                ValidateIssuer = true,
-            //                // строка, представляющая издателя
-            //                ValidIssuer = AuthOptions.ISSUER,
-            //                // будет ли валидироваться потребитель токена
-            //                ValidateAudience = true,
-            //                // установка потребителя токена
-            //                ValidAudience = AuthOptions.AUDIENCE,
-            //                // будет ли валидироваться время существования
-            //                ValidateLifetime = true,
-            //                // установка ключа безопасности
-            //                IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
-            //                // валидация ключа безопасности
-            //                ValidateIssuerSigningKey = true
-            //            };
-            //        });
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                    .AddJwtBearer(options =>
+                    {
+                        options.RequireHttpsMetadata = false;
+                        options.TokenValidationParameters = new TokenValidationParameters
+                        {
+                            // укзывает, будет ли валидироваться издатель при валидации токена
+                            ValidateIssuer = true,
+                            // строка, представляющая издателя
+                            ValidIssuer = Configuration["AuthOptions:ISSUER"],
+                            // будет ли валидироваться потребитель токена
+                            ValidateAudience = true,
+                            // установка потребителя токена
+                            ValidAudience = Configuration["AuthOptions:AUDIENCE"],
+                            // будет ли валидироваться время существования
+                            ValidateLifetime = true,
+                            // установка ключа безопасности
+                            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["AuthOptions:KEY"])),
+                            // валидация ключа безопасности
+                            ValidateIssuerSigningKey = true
+                        };
+                    });
 
             services.AddMvc();
         }
@@ -63,7 +70,7 @@ namespace StoreWebAPI {
             }
 
             app.UseStaticFiles();
-            //app.UseAuthentication();
+            app.UseAuthentication();
             app.UseMvc();
             
         }

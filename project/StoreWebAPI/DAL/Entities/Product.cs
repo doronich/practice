@@ -1,10 +1,3 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace DAL.Entities
-{
-    class Product
-    {
-    }
+﻿namespace DAL.Entities {
+    internal class Product { }
 }

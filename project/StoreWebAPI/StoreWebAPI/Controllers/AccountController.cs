@@ -30,13 +30,15 @@ namespace StoreWebAPI.Controllers {
         //}
 
         //[HttpPost("/token")]
-        //public async Task Token() {
+        //public async Task Token()
+        //{
         //    var username = this.Request.Form["username"];
         //    var password = this.Request.Form["password"];
 
         //    var identity = this.GetIdentity(username, password);
 
-        //    if(identity == null) {
+        //    if (identity == null)
+        //    {
         //        this.Response.StatusCode = 400;
         //        await this.Response.WriteAsync("Invalid username or password.");
         //        return;
@@ -48,15 +50,16 @@ namespace StoreWebAPI.Controllers {
         //    var jwt = new JwtSecurityToken(
         //        AuthOptions.ISSUER,
         //        AuthOptions.AUDIENCE,
-        //        notBefore : now,
-        //        claims : identity.Claims,
-        //        expires : now.Add(TimeSpan.FromMinutes(AuthOptions.LIFETIME)),
-        //        signingCredentials : new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(),
+        //        notBefore: now,
+        //        claims: identity.Claims,
+        //        expires: now.Add(TimeSpan.FromMinutes(AuthOptions.LIFETIME)),
+        //        signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(),
         //            SecurityAlgorithms.HmacSha256));
 
         //    var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
 
-        //    var response = new {
+        //    var response = new
+        //    {
         //        access_token = encodedJwt,
         //        username = identity.Name
         //    };
@@ -67,10 +70,12 @@ namespace StoreWebAPI.Controllers {
         //        new JsonSerializerSettings { Formatting = Formatting.Indented }));
         //}
 
-        //private ClaimsIdentity GetIdentity(string username, string password) {
+        //private ClaimsIdentity GetIdentity(string username, string password)
+        //{
         //    var user = this.m_context.Users.FirstOrDefault(x => x.Login == username && x.Password == password);
 
-        //    if(user != null) {
+        //    if (user != null)
+        //    {
         //        var claims = new List<Claim> {
         //            new Claim(ClaimsIdentity.DefaultNameClaimType, user.Login),
         //            new Claim(ClaimsIdentity.DefaultRoleClaimType, user.Role.ToString())
