@@ -34,7 +34,7 @@ namespace StoreWebAPI {
             services.AddScoped<ISecurityService, SecurityService>();
 
             services.Configure<AuthSettings>(this.Configuration.GetSection("AuthOptions"));
-
+            
             //Auth
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                     .AddJwtBearer(options =>
@@ -44,6 +44,7 @@ namespace StoreWebAPI {
                         {
                             // укзывает, будет ли валидироваться издатель при валидации токена
                             ValidateIssuer = true,
+                            
                             // строка, представляющая издателя
                             ValidIssuer = this.Configuration["AuthOptions:ISSUER"],
                             // будет ли валидироваться потребитель токена

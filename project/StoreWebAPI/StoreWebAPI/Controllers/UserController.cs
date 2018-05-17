@@ -9,8 +9,8 @@ using Microsoft.AspNetCore.Mvc;
 namespace StoreWebAPI.Controllers {
     [Route("api")]
     public class UserController : Controller {
-        private readonly IUserService m_userService;
         private readonly ISecurityService m_securityService;
+        private readonly IUserService m_userService;
 
         public UserController(IUserService userService, ISecurityService securityService) {
             this.m_userService = userService;
@@ -28,9 +28,10 @@ namespace StoreWebAPI.Controllers {
 
             return this.Json(user);
         }
+
         [Authorize]
         [HttpGet("Users")]
-        public async Task<IActionResult> GetUsersAsync() {
+        public async Task<IActionResult> GetUsers() {
             IList<UserViewModel> users;
 
             try {
@@ -42,8 +43,9 @@ namespace StoreWebAPI.Controllers {
             return this.Json(users);
         }
 
+        [AllowAnonymous]
         [HttpPost("Register")]
-        public async Task<IActionResult> RegisterUserAsync([FromBody] RegisterUserViewModel model) {
+        public async Task<IActionResult> RegisterUser([FromBody] RegisterUserViewModel model) {
             if(!this.ModelState.IsValid) return this.BadRequest("Incorrect data.");
             try {
                 var token = await this.m_userService.InsertUserAsync(model);
@@ -53,8 +55,9 @@ namespace StoreWebAPI.Controllers {
             }
         }
 
+        [Authorize]
         [HttpPut("Update")]
-        public async Task<IActionResult> EditUserAsync([FromBody] UpdateUserViewModel model) {
+        public async Task<IActionResult> EditUser([FromBody] UpdateUserViewModel model) {
             if(!this.ModelState.IsValid) return this.BadRequest("Incorrect data.");
             try {
                 await this.m_userService.UpdateUserAsync(model);
@@ -64,9 +67,9 @@ namespace StoreWebAPI.Controllers {
 
             return this.Ok();
         }
-
+        [Authorize]
         [HttpDelete("Delete")]
-        public async Task<IActionResult> DeleteUserAsync([FromBody] long id) {
+        public async Task<IActionResult> DeleteUser([FromBody] long id) {
             try {
                 await this.m_userService.DeleteUserAsync(id);
             } catch(Exception exception) {
@@ -75,7 +78,7 @@ namespace StoreWebAPI.Controllers {
 
             return this.Ok();
         }
-
+        [AllowAnonymous]
         [HttpPost("Token")]
         public async Task<IActionResult> Token([FromBody] LoginUserViewModel model) {
             if(!this.ModelState.IsValid) return this.BadRequest("Incorrect data.");

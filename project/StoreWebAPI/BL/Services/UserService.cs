@@ -6,6 +6,7 @@ using BL.Interfaces;
 using BL.ViewModels;
 using DAL.Entities;
 using DAL.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace BL.Services {
     public class UserService : IUserService {
@@ -17,47 +18,55 @@ namespace BL.Services {
             this.m_security = securityService;
         }
 
-        //ok
+        //DELETE
         public async Task DeleteUserAsync(long id) {
             var user = await this.m_userRepository.GetByIdAsync(id);
-            if(user == null) throw new Exception("User didn't fount.");
+            if(user == null) throw new Exception("User not found.");
             await this.m_userRepository.DeleteAsync(user);
         }
 
-        //ok
+        //USER
         public async Task<UserViewModel> GetUserAsync(long id) {
             var user = await this.m_userRepository.GetByIdAsync(id);
+            if(user == null) throw new Exception("User not found.");
             return new UserViewModel {
                 UserName = user.Login,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
-                AddedDate = user.CreatedDate
+                AddedDate = user.CreatedDate,
+                Role = user.Role
             };
         }
 
-        //almost
+        //USERs
         public async Task<IList<UserViewModel>> GetUsersAsync() {
             //var query = predicate == null ? await this.m_userRepository.GetAllAsync() : await this.m_userRepository.GetAllAsync(predicate);
 
             var query = await this.m_userRepository.GetAllAsync();
+            var users = await query.AnyAsync();
+            if(!users)
+            {
+                throw new Exception("No users found.");
+            }
 
             return query.Select(item => new UserViewModel {
                 FirstName = item.FirstName,
                 LastName = item.LastName,
                 UserName = item.Login,
-                AddedDate = item.CreatedDate
+                AddedDate = item.CreatedDate,
+                Role = item.Role
             }).ToList();
         }
 
-        //ok
+        //ISERT
         public async Task<string> InsertUserAsync(RegisterUserViewModel model) {
             var user = new User {
                 Login = model.Login,
                 Email = model.Email,
-                Password = this.m_security.EncryptPassword(model.Password),
+                Password = await this.m_security.EncryptPasswordAsync(model.Password),
                 Role = UserRoles.User,
                 CreatedBy = model.CreatedBy ?? "Admin1",
-                CreatedDate = DateTime.UtcNow,
+                CreatedDate = DateTime.Now,
                 FirstName = model.Firstname,
                 LastName = model.Lastname,
                 Active = true
@@ -65,28 +74,26 @@ namespace BL.Services {
             //true true
             var ex = !await this.m_userRepository.ExistAsync(u => u.Login == user.Login) && !await this.m_userRepository.ExistAsync(e => e.Email == user.Email);
             if(ex) await this.m_userRepository.CreateAsync(user);
-            else throw new Exception("Login or email already exist.");
+            else throw new Exception("Login or email already exists.");
             if(user.Id <= 0) throw new Exception("Registration error.");
 
-            return await this.m_security.GetTokenAsync(new LoginUserViewModel { Login = user.Login, Password = model.Password, Role = user.Role },true);
+            return await this.m_security.GetTokenAsync(new LoginUserViewModel { Login = user.Login, Password = model.Password, Role = user.Role }, true);
         }
 
-        //ok
+        //UPDATE
         public async Task UpdateUserAsync(UpdateUserViewModel model) {
             var user = await this.m_userRepository.GetByIdAsync(model.Id);
-
+            if(user == null) throw new Exception("User not found.");
             user.Email = model.Email ?? user.Email;
-            user.Password = this.m_security.EncryptPassword(model.Password) ?? user.Password;
+            user.Password = model.Password == null ? user.Password : await this.m_security.EncryptPasswordAsync(model.Password);
             user.FirstName = model.Firstname ?? user.FirstName;
             user.LastName = model.Lastname ?? user.LastName;
             user.UpdatedBy = model.UpdatedBy ?? user.UpdatedBy;
-            user.UpdatedDate = DateTime.UtcNow;
+            user.UpdatedDate = DateTime.Now;
 
             await this.m_userRepository.UpdateAsync(user);
 
             if(user.Id <= 0) throw new Exception("Update error.");
         }
-
-        
     }
 }
