@@ -22,7 +22,7 @@ namespace DAL.Repository {
         }
 
         public async Task CreateAsync(TEntity item) {
-            if(item == null) throw new ArgumentNullException("item");
+            if(item == null) throw new ArgumentNullException(nameof(item));
             await this.m_dbSet.AddAsync(item);
             await this.m_context.SaveChangesAsync();
         }
@@ -40,14 +40,14 @@ namespace DAL.Repository {
         }
 
         public async Task UpdateAsync(TEntity item) {
-            if(item == null) throw new ArgumentNullException("item");
+            if(item == null) throw new ArgumentNullException(nameof(item));
 
             this.m_context.Entry(item).State = EntityState.Modified;
             await this.m_context.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(TEntity item) {
-            if(item == null) throw new ArgumentNullException("item");
+            if(item == null) throw new ArgumentNullException(nameof(item));
 
             this.m_context.Remove(item);
             await this.m_context.SaveChangesAsync();

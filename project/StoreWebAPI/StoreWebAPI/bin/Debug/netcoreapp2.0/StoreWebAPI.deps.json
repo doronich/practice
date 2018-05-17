@@ -1,7 +1,7 @@
 {
   "runtimeTarget": {
     "name": ".NETCoreApp,Version=v2.0",
-    "signature": "9dd1ada718982911c34b77d6a8f3a98f1f7a9dd0"
+    "signature": "8057757dc4fbaee66022b7f02fd42b3cc36bec9d"
   },
   "compilationOptions": {
     "defines": [
@@ -34,6 +34,14 @@
         },
         "compile": {
           "StoreWebAPI.dll": {}
+        }
+      },
+      "BCrypt.Net-Next/2.1.3": {
+        "runtime": {
+          "lib/netstandard2.0/BCrypt.Net-Next.dll": {}
+        },
+        "compile": {
+          "lib/netstandard2.0/BCrypt.Net-Next.dll": {}
         }
       },
       "Libuv/1.10.0": {
@@ -4072,6 +4080,7 @@
       },
       "BL/1.0.0": {
         "dependencies": {
+          "BCrypt.Net-Next": "2.1.3",
           "DAL": "1.0.0",
           "System.IdentityModel.Tokens.Jwt": "5.2.2"
         },
@@ -4278,6 +4287,13 @@
       "type": "project",
       "serviceable": false,
       "sha512": ""
+    },
+    "BCrypt.Net-Next/2.1.3": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-V7tn1PktL7gax2RTz7YFpEhuc3xLI1mq2lGaoII1qx6gPqSvW7SeWwm0/HxZQD2Eg2e9WknEGooXefgck6t99Q==",
+      "path": "bcrypt.net-next/2.1.3",
+      "hashPath": "bcrypt.net-next.2.1.3.nupkg.sha512"
     },
     "Libuv/1.10.0": {
       "type": "package",

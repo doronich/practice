@@ -12,9 +12,10 @@ using System;
 namespace DAL.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20180517072234_TokenMigr")]
+    partial class TokenMigr
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -36,19 +37,19 @@ namespace DAL.Migrations
                     b.Property<string>("Email")
                         .IsRequired();
 
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasMaxLength(50);
+                    b.Property<string>("Firstname")
+                        .HasMaxLength(20);
 
-                    b.Property<string>("LastName")
-                        .HasMaxLength(50);
+                    b.Property<string>("Lastname")
+                        .HasMaxLength(20);
 
                     b.Property<string>("Login")
                         .IsRequired()
                         .HasMaxLength(20);
 
                     b.Property<string>("Password")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasMaxLength(20);
 
                     b.Property<int>("Role");
 

@@ -3,15 +3,18 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using BL.Interfaces;
 using BL.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace StoreWebAPI.Controllers {
     [Route("api")]
     public class UserController : Controller {
         private readonly IUserService m_userService;
+        private readonly ISecurityService m_securityService;
 
-        public UserController(IUserService userService) {
+        public UserController(IUserService userService, ISecurityService securityService) {
             this.m_userService = userService;
+            this.m_securityService = securityService;
         }
 
         [HttpGet("User")]
@@ -25,7 +28,7 @@ namespace StoreWebAPI.Controllers {
 
             return this.Json(user);
         }
-
+        [Authorize]
         [HttpGet("Users")]
         public async Task<IActionResult> GetUsersAsync() {
             IList<UserViewModel> users;
@@ -41,7 +44,7 @@ namespace StoreWebAPI.Controllers {
 
         [HttpPost("Register")]
         public async Task<IActionResult> RegisterUserAsync([FromBody] RegisterUserViewModel model) {
-            if(!this.ModelState.IsValid) return this.BadRequest("!");
+            if(!this.ModelState.IsValid) return this.BadRequest("Incorrect data.");
             try {
                 var token = await this.m_userService.InsertUserAsync(model);
                 return this.Ok(token);
@@ -52,7 +55,7 @@ namespace StoreWebAPI.Controllers {
 
         [HttpPut("Update")]
         public async Task<IActionResult> EditUserAsync([FromBody] UpdateUserViewModel model) {
-            if(!this.ModelState.IsValid) return this.BadRequest();
+            if(!this.ModelState.IsValid) return this.BadRequest("Incorrect data.");
             try {
                 await this.m_userService.UpdateUserAsync(model);
             } catch(Exception exception) {
@@ -75,10 +78,10 @@ namespace StoreWebAPI.Controllers {
 
         [HttpPost("Token")]
         public async Task<IActionResult> Token([FromBody] LoginUserViewModel model) {
-            if(!this.ModelState.IsValid) return this.BadRequest();
+            if(!this.ModelState.IsValid) return this.BadRequest("Incorrect data.");
 
             try {
-                var token = await this.m_userService.GetTokenAsync(model);
+                var token = await this.m_securityService.GetTokenAsync(model);
                 return this.Ok(token);
             } catch(Exception exception) {
                 return this.BadRequest(exception.Message);

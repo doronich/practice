@@ -28,8 +28,10 @@ namespace StoreWebAPI {
             services.AddDbContext<ApplicationContext>(
                 options => options.UseSqlServer(this.Configuration.GetConnectionString("DefaultConnection"))
             );
+            //DI
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-            services.AddTransient<IUserService, UserService>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<ISecurityService, SecurityService>();
 
             services.Configure<AuthSettings>(this.Configuration.GetSection("AuthOptions"));
 
@@ -43,15 +45,15 @@ namespace StoreWebAPI {
                             // укзывает, будет ли валидироваться издатель при валидации токена
                             ValidateIssuer = true,
                             // строка, представляющая издателя
-                            ValidIssuer = Configuration["AuthOptions:ISSUER"],
+                            ValidIssuer = this.Configuration["AuthOptions:ISSUER"],
                             // будет ли валидироваться потребитель токена
                             ValidateAudience = true,
                             // установка потребителя токена
-                            ValidAudience = Configuration["AuthOptions:AUDIENCE"],
+                            ValidAudience = this.Configuration["AuthOptions:AUDIENCE"],
                             // будет ли валидироваться время существования
                             ValidateLifetime = true,
                             // установка ключа безопасности
-                            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["AuthOptions:KEY"])),
+                            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(this.Configuration["AuthOptions:KEY"])),
                             // валидация ключа безопасности
                             ValidateIssuerSigningKey = true
                         };

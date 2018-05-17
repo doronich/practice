@@ -13,7 +13,5 @@ namespace BL.Interfaces {
         Task UpdateUserAsync(UpdateUserViewModel model);
 
         Task DeleteUserAsync(long id);
-
-        Task<string> GetTokenAsync(LoginUserViewModel model);
     }
 }

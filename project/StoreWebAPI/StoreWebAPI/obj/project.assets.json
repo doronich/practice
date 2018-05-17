@@ -2,6 +2,15 @@
   "version": 3,
   "targets": {
     ".NETCoreApp,Version=v2.0": {
+      "BCrypt.Net-Next/2.1.3": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/BCrypt.Net-Next.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/BCrypt.Net-Next.dll": {}
+        }
+      },
       "Libuv/1.10.0": {
         "type": "package",
         "dependencies": {
@@ -5055,6 +5064,7 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v2.0",
         "dependencies": {
+          "BCrypt.Net-Next": "2.1.3",
           "DAL": "1.0.0",
           "System.IdentityModel.Tokens.Jwt": "5.2.2"
         },
@@ -5083,6 +5093,37 @@
     }
   },
   "libraries": {
+    "BCrypt.Net-Next/2.1.3": {
+      "sha512": "V7tn1PktL7gax2RTz7YFpEhuc3xLI1mq2lGaoII1qx6gPqSvW7SeWwm0/HxZQD2Eg2e9WknEGooXefgck6t99Q==",
+      "type": "package",
+      "path": "bcrypt.net-next/2.1.3",
+      "files": [
+        "bcrypt.net-next.2.1.3.nupkg.sha512",
+        "bcrypt.net-next.nuspec",
+        "lib/net20/BCrypt.Net-Next.dll",
+        "lib/net20/BCrypt.Net-Next.xml",
+        "lib/net35/BCrypt.Net-Next.dll",
+        "lib/net35/BCrypt.Net-Next.xml",
+        "lib/net40/BCrypt.Net-Next.dll",
+        "lib/net40/BCrypt.Net-Next.xml",
+        "lib/net45/BCrypt.Net-Next.dll",
+        "lib/net45/BCrypt.Net-Next.xml",
+        "lib/net451/BCrypt.Net-Next.dll",
+        "lib/net451/BCrypt.Net-Next.xml",
+        "lib/net452/BCrypt.Net-Next.dll",
+        "lib/net452/BCrypt.Net-Next.xml",
+        "lib/net462/BCrypt.Net-Next.dll",
+        "lib/net462/BCrypt.Net-Next.xml",
+        "lib/net47/BCrypt.Net-Next.dll",
+        "lib/net47/BCrypt.Net-Next.xml",
+        "lib/netstandard1.3/BCrypt.Net-Next.dll",
+        "lib/netstandard1.3/BCrypt.Net-Next.xml",
+        "lib/netstandard1.6/BCrypt.Net-Next.dll",
+        "lib/netstandard1.6/BCrypt.Net-Next.xml",
+        "lib/netstandard2.0/BCrypt.Net-Next.dll",
+        "lib/netstandard2.0/BCrypt.Net-Next.xml"
+      ]
+    },
     "Libuv/1.10.0": {
       "sha512": "GsCf4q+eyaI49rCPlgYxdxa1SQCysXFFdSJWdstrwxytg4+VPYLYrXD4AT2rjHVJ+UF7SSWX9CapWEYaU4ejVQ==",
       "type": "package",
