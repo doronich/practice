@@ -34,7 +34,16 @@ namespace StoreWebAPI {
             services.AddScoped<ISecurityService, SecurityService>();
 
             services.Configure<AuthSettings>(this.Configuration.GetSection("AuthOptions"));
-            
+            //CORS
+            services.AddCors(options => {
+                options.AddPolicy("CorsPolicy",
+                    policy =>
+                        policy.AllowAnyOrigin()
+                              .AllowAnyMethod()
+                              .AllowAnyHeader()
+                              .AllowCredentials()
+                              .Build());
+            });
             //Auth
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                     .AddJwtBearer(options =>
@@ -72,6 +81,7 @@ namespace StoreWebAPI {
                 app.UseExceptionHandler("/Error");
             }
 
+            app.UseCors("CorsPolicy");
             app.UseStaticFiles();
             app.UseAuthentication();
             app.UseMvc();
