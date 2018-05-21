@@ -73,12 +73,12 @@ namespace BL.Services {
             return JsonConvert.SerializeObject(response, new JsonSerializerSettings { Formatting = Formatting.Indented });
         }
 
-        private async Task<ClaimsIdentity> GetIdentityAsync(LoginUserViewModel model, bool reg)
-        {
+        private async Task<ClaimsIdentity> GetIdentityAsync(LoginUserViewModel model, bool reg) {
+            User user= new User();
             if (!reg)
             {
                 var res = await this.m_userRepository.GetAllAsync(u => u.Login == model.Login);
-                var user = await res.FirstOrDefaultAsync();
+                user = await res.FirstOrDefaultAsync();
                 if (user == null) throw new Exception("Login not found.");
                 var pass = user.Password;
                 reg = await this.m_userRepository.ExistAsync(u => u.Login == model.Login && BcryptHash.CheckBcryptPassword(model.Password, pass));
@@ -88,7 +88,7 @@ namespace BL.Services {
             {
                 var claims = new List<Claim> {
                     new Claim(ClaimsIdentity.DefaultNameClaimType, model.Login),
-                    new Claim(ClaimsIdentity.DefaultRoleClaimType, model.Role.ToString())
+                    new Claim(ClaimsIdentity.DefaultRoleClaimType, user.Role.ToString())
                 };
                 var claimsIdentity = new ClaimsIdentity(claims,
                     "TokenAsync",

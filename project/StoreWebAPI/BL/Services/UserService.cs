@@ -77,7 +77,7 @@ namespace BL.Services {
             else throw new Exception("Login or email already exists.");
             if(user.Id <= 0) throw new Exception("Registration error.");
 
-            return await this.m_security.GetTokenAsync(new LoginUserViewModel { Login = user.Login, Password = model.Password, Role = user.Role }, true);
+            return await this.m_security.GetTokenAsync(new LoginUserViewModel { Login = user.Login, Password = model.Password }, true);
         }
 
         //UPDATE
