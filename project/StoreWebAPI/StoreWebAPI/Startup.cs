@@ -32,6 +32,7 @@ namespace StoreWebAPI {
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ISecurityService, SecurityService>();
+            services.AddScoped<IItemService, ItemService>();
 
             services.Configure<AuthSettings>(this.Configuration.GetSection("AuthOptions"));
             //CORS
