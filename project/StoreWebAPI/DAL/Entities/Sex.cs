@@ -5,8 +5,9 @@ using System.Text;
 namespace DAL.Entities
 {
     public enum Sex {
+        Uni,
         Male,
-        Female,
-        Uni
+        Female
+        
     }
 }

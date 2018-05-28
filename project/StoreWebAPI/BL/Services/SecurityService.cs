@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq.Expressions;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -77,7 +78,7 @@ namespace BL.Services {
             User user= new User();
             if (!reg)
             {
-                var res = await this.m_userRepository.GetAllAsync(u => u.Login == model.Login);
+                var res = await this.m_userRepository.GetAllAsync(new List<Expression<Func<User, bool>>>{u => u.Login == model.Login});
                 user = await res.FirstOrDefaultAsync();
                 if (user == null) throw new Exception("Login not found.");
                 var pass = user.Password;

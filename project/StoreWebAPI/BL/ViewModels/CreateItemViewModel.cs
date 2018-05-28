@@ -5,10 +5,8 @@ using DAL.Entities;
 
 namespace BL.ViewModels
 {
-    public class GetItemViwModel
+    public class CreateItemViewModel
     {
-        public long Id { get; set; }
-        public bool Active { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public string Color { get; set; }
@@ -21,5 +19,7 @@ namespace BL.ViewModels
         public string Size { get; set; }
         public int Amount { get; set; }
         public Sex Sex { get; set; }
+
+        public string Image { get; set; }
     }
 }

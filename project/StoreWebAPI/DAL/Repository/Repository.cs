@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
@@ -6,7 +7,6 @@ using DAL.Context;
 using DAL.Entities;
 using DAL.Interfaces;
 using Microsoft.EntityFrameworkCore;
-
 
 //написать exceptions
 namespace DAL.Repository {
@@ -27,13 +27,19 @@ namespace DAL.Repository {
             await this.m_context.SaveChangesAsync();
         }
 
-        public async Task<IQueryable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> predicate = null) {
-            return await Task.Run(() => predicate == null ? this.m_dbSet : this.m_dbSet.Where(predicate));
+        public async Task<IQueryable<TEntity>> GetAllAsync(IEnumerable<Expression<Func<TEntity, bool>>> predicate = null) {
+            return await Task.Run(() => {
+                if(predicate == null) return this.m_dbSet;
+
+                var set = this.m_dbSet.AsQueryable();
+                return predicate.Aggregate(set, (current, pr) => current.Where(pr));
+            });
         }
 
         public async Task<TEntity> GetByIdAsync(long id) {
             return await this.m_dbSet.FindAsync(id);
         }
+
         // ======================
         public async Task<bool> ExistAsync(Expression<Func<TEntity, bool>> predicate = null) {
             return predicate == null ? await this.m_dbSet.AnyAsync() : await this.m_dbSet.AnyAsync(predicate);
@@ -52,6 +58,5 @@ namespace DAL.Repository {
             this.m_context.Remove(item);
             await this.m_context.SaveChangesAsync();
         }
-
     }
 }
