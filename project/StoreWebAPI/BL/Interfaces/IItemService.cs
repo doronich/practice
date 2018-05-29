@@ -10,7 +10,7 @@ namespace BL.Interfaces
     public interface IItemService {
         Task InsertItemAsync(CreateItemViewModel item);
 
-        Task UpdateItemAsync(Item item);
+        Task UpdateItemAsync(UpdateItemViewModel item);
 
         Task DeleteItemAsync(long id, bool deactive = true);
 

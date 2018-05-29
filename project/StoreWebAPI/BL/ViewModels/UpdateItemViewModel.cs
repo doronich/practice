@@ -5,7 +5,7 @@ using DAL.Entities;
 
 namespace BL.ViewModels
 {
-    public class CreateItemViewModel
+    public class UpdateItemViewModel
     {
         public int Id { get; set; }
         public bool Active { get; set; }

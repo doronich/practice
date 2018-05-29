@@ -11,14 +11,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BL.Services {
     public class ItemService : IItemService {
-        private readonly IRepository<Item> m_itemRepository;
         private readonly IImageService m_imageService;
+        private readonly IRepository<Item> m_itemRepository;
 
         public ItemService(IRepository<Item> itemRepository, IImageService imageService) {
             this.m_itemRepository = itemRepository;
             this.m_imageService = imageService;
         }
 
+        //active = false
         public async Task DeleteItemAsync(long id, bool deactive = true) {
             var item = await this.m_itemRepository.GetByIdAsync(id);
             if(item == null) throw new Exception("Item not found.");
@@ -38,35 +39,54 @@ namespace BL.Services {
         }
 
         public async Task InsertItemAsync(CreateItemViewModel model) {
-            Item item = new Item {
-                Active = true,
+            var item = new Item {
+                Active = model.Active,
                 CreatedBy = "Admin",
                 CreatedDate = DateTime.Now,
                 Amount = model.Amount,
-                Brand = model.Brand,
-                Color = model.Color,
+                Brand = model.Brand.ToLower(),
+                Color = model.Color.ToLower(),
                 Description = model.Description,
                 Discount = model.Discount,
-                ImagePath = model.Image==null? "": await this.m_imageService.GetImagePathAsync(model.Image),
+                ImagePath = string.IsNullOrEmpty(model.Image) ? "" : await this.m_imageService.GetImagePathAsync(model.Image),
                 Kind = model.Kind,
                 Name = model.Name,
                 Price = model.Price,
                 Sex = model.Sex,
-                Size = model.Size,
+                Size = model.Size.ToLower(),
                 Status = model.Status,
-                Subkind = model.Subkind
+                Subkind = model.Subkind.ToLower()
             };
 
-            
-            
             await this.m_itemRepository.CreateAsync(item);
             if(item.Id <= 0) throw new Exception("Creating error.");
         }
 
-        public async Task UpdateItemAsync(Item item) {
-            var res = await this.m_itemRepository.GetByIdAsync(item.Id);
-            if(res == null) throw new Exception("Item not found.");
+        public async Task UpdateItemAsync(UpdateItemViewModel model) {
+            var item = await this.m_itemRepository.GetByIdAsync(model.Id);
+            if(item == null) throw new Exception("Item not found.");
+
+            item.Active = model.Active;
+            item.CreatedBy = "Admin";
+            item.CreatedDate = DateTime.Now;
+            item.Amount = model.Amount;
+            item.Brand = model.Brand;
+            item.Color = model.Color;
+            item.Description = model.Description;
+            item.Discount = model.Discount;
+            item.ImagePath = string.IsNullOrEmpty(model.Image) ? "" : await this.m_imageService.GetImagePathAsync(model.Image);
+            item.Kind = model.Kind;
+            item.Name = model.Name;
+            item.Price = model.Price;
+            item.Sex = model.Sex;
+            item.Size = model.Size;
+            item.Status = model.Status;
+            item.Subkind = model.Subkind;
+            item.UpdatedBy = "Admin";
+            item.UpdatedDate = DateTime.Now;
+
             await this.m_itemRepository.UpdateAsync(item);
+            if(item.Id <= 0) throw new Exception("Updating error.");
         }
 
         public async Task<IList<Item>> GetAllItemAsync() {
@@ -77,12 +97,30 @@ namespace BL.Services {
         }
 
         public async Task<IList<Item>> GetItemsByKindAsync(ReqItemViewModel item) {
-            var kind = KindsOfItems.Other;
-            var sex = Sex.Uni;
-            var status = Statuses.Default;
             var expressionsList = new List<Expression<Func<Item, bool>>>();
 
-            if(item.Kind != null)
+            if(item.Color != null) {
+                Expression<Func<Item, bool>> expColor = i => i.Color == item.Color;
+                expressionsList.Add(expColor);
+            }
+
+            if(item.Brand != null) {
+                Expression<Func<Item, bool>> expBrand = i => i.Brand == item.Brand;
+                expressionsList.Add(expBrand);
+            }
+
+            if(item.Size != null) {
+                Expression<Func<Item, bool>> expSize = i => i.Size == item.Size;
+                expressionsList.Add(expSize);
+            }
+
+            if(item.Subkind != null) {
+                Expression<Func<Item, bool>> expSubkind = i => i.Subkind == item.Subkind;
+                expressionsList.Add(expSubkind);
+            }
+
+            if(item.Kind != null) {
+                KindsOfItems kind;
                 switch(item.Kind.ToLower()) {
                     case "sneakers":
                         kind = KindsOfItems.Footwear;
@@ -98,20 +136,12 @@ namespace BL.Services {
                         break;
                 }
 
-            if(item.Sex != null)
-                switch(item.Sex.ToLower()) {
-                    case "male":
-                        sex = Sex.Male;
-                        break;
-                    case "female":
-                        sex = Sex.Female;
-                        break;
-                    default:
-                        sex = Sex.Uni;
-                        break;
-                }
+                Expression<Func<Item, bool>> expKind = i => i.Kind == kind;
+                expressionsList.Add(expKind);
+            }
 
-            if(item.Status != null)
+            if(item.Status != null) {
+                Statuses status;
                 switch(item.Status.ToLower()) {
                     case "discounted":
                         status = Statuses.Discounted;
@@ -125,22 +155,30 @@ namespace BL.Services {
                         break;
                 }
 
-            Expression<Func<Item, bool>> expColor = i => i.Color == item.Color;
-            Expression<Func<Item, bool>> expKind = i => i.Kind == kind;
-            Expression<Func<Item, bool>> expStatus = i => i.Status == status;
-            Expression<Func<Item, bool>> expSex = i => i.Sex == sex;
-            Expression<Func<Item, bool>> expSubkind = i => i.Subkind == item.Subkind;
-            Expression<Func<Item, bool>> expBrand = i => i.Brand == item.Brand;
-            Expression<Func<Item, bool>> expSize = i => i.Brand == item.Brand;
+                Expression<Func<Item, bool>> expStatus = i => i.Status == status;
+                expressionsList.Add(expStatus);
+            }
 
-            if(item.Color != null) expressionsList.Add(expColor);
-            if(item.Brand != null) expressionsList.Add(expBrand);
-            if(item.Size != null) expressionsList.Add(expSize);
-            if(item.Subkind != null) expressionsList.Add(expSubkind);
-            expressionsList.AddRange(new List<Expression<Func<Item, bool>>> { expKind, expStatus, expSex });
+            if(item.Sex != null) {
+                Sex sex;
+                switch(item.Sex.ToLower()) {
+                    case "male":
+                        sex = Sex.Male;
+                        break;
+                    case "female":
+                        sex = Sex.Female;
+                        break;
+                    default:
+                        sex = Sex.Uni;
+                        break;
+                }
+
+                Expression<Func<Item, bool>> expSex = i => i.Sex == sex;
+                expressionsList.Add(expSex);
+            }
 
             var query = await this.m_itemRepository.GetAllAsync(expressionsList);
-            //if(query==null) throw new Exception("");
+            if(query == null) throw new Exception("Some troubles with items!@?1");
             return query.ToList();
         }
     }

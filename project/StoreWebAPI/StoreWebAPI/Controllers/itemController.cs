@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace StoreWebAPI.Controllers {
-    
     [Produces("application/json")]
     [Route("api/item")]
     public class ItemController : Controller {
@@ -18,47 +17,40 @@ namespace StoreWebAPI.Controllers {
             this.m_itemService = itemService;
         }
 
-        //GET: api/item
+        //GET: api/item/
         [HttpGet("all")]
-        public async Task<IActionResult> All()
-        {
+        public async Task<IActionResult> All() {
             IEnumerable<Item> items;
 
-            try
-            {
+            try {
                 items = await this.m_itemService.GetAllItemAsync();
-                return Json(items);
-            }
-            catch (Exception exception)
-            {
+                return this.Json(items);
+            } catch(Exception exception) {
                 return this.BadRequest(exception.Message);
             }
-
-
         }
 
         // GET: api/item/q?
         [HttpGet("q")]
-        public async Task<IActionResult> GetBy(ReqItemViewModel item)
-        {
-            if(!ModelState.IsValid) {
-                return this.BadRequest("Incorrect request");
-            }
-            IEnumerable<Item> items;
+        public async Task<IActionResult> GetBy(ReqItemViewModel item) {
+            if(!this.ModelState.IsValid) return this.BadRequest("Incorrect request");
 
-            try
-            {
-                items = await this.m_itemService.GetItemsByKindAsync(item);
-                return Json(items);
-            }
-            catch (Exception exception)
-            {
+            try {
+                IEnumerable<Item> items = await this.m_itemService.GetItemsByKindAsync(item);
+                return this.Json(items);
+            } catch(Exception exception) {
                 return this.BadRequest(exception.Message);
             }
-
-
         }
 
+        // POST: api/item
+        [HttpPost("image")]
+        
+        public async Task<IActionResult> LoadImage() {
+            var body = this.Request.Body;
+            var head = this.Request.Headers;
+            return this.Ok();
+        }
 
         // GET: api/item/5
         [HttpGet("{id}", Name = "Get")]
@@ -85,14 +77,30 @@ namespace StoreWebAPI.Controllers {
             }
         }
 
-        // PUT: api/item/5
+        // PUT: api/item
         [Authorize]
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value) { }
+        [HttpPut]
+        public async Task<IActionResult> Put([FromBody] UpdateItemViewModel item) {
+            if(!this.ModelState.IsValid) return this.BadRequest("Incorrect data.");
 
-        // DELETE: api/ApiWithActions/5
+            try {
+                await this.m_itemService.UpdateItemAsync(item);
+                return this.Ok();
+            } catch(Exception exception) {
+                return this.BadRequest(exception.Message);
+            }
+        }
+
+        // DELETE: api/item/5
         [Authorize]
         [HttpDelete("{id}")]
-        public void Delete(int id) { }
+        public async Task<IActionResult> Delete(int id) {
+            try {
+                await this.m_itemService.DeleteItemAsync(id);
+                return this.Ok();
+            } catch(Exception exception) {
+                return this.BadRequest(exception.Message);
+            }
+        }
     }
 }

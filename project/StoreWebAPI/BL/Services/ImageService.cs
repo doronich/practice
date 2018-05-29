@@ -10,7 +10,7 @@ namespace BL.Services {
 
             var base64Str = image.Substring(image.IndexOf(',') + 1);
             var bytes = Convert.FromBase64String(base64Str);
-            var name = "../../store/" + DateTime.Now.ToString("yyyyMMddhhmmss") + type;
+            var name = "../ImageStore/" + DateTime.Now.ToString("yyyyMMddhhmmss") +"."+ type;
 
             await File.WriteAllBytesAsync(name, bytes);
             return name;
@@ -22,7 +22,9 @@ namespace BL.Services {
 
             var end = res.IndexOf(';');
             res = res.Remove(end);
-
+            if(res != "png" && res!="jpeg" && res!="gif" && res!="pjpeg") {
+                throw new Exception("Incorrect image format.");
+            }
             return res;
         }
     }
