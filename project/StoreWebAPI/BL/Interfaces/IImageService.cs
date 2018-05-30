@@ -7,5 +7,7 @@ namespace BL.Interfaces
 {
     public interface IImageService {
         Task<string> GetImagePathAsync(string image);
+
+        Task<string> GetBase64StringAsync(string path);
     } 
 }

@@ -20,7 +20,7 @@ namespace BL.Services {
         }
 
         //active = false
-        public async Task DeleteItemAsync(long id, bool deactive = true) {
+        public async Task DeleteItemAsync(long id, bool deactive = false) {
             var item = await this.m_itemRepository.GetByIdAsync(id);
             if(item == null) throw new Exception("Item not found.");
 
@@ -34,6 +34,7 @@ namespace BL.Services {
 
         public async Task<Item> GetItemAsync(long id) {
             var item = await this.m_itemRepository.GetByIdAsync(id);
+            item.ImagePath = await this.m_imageService.GetBase64StringAsync(item.ImagePath);
             if(item == null) throw new Exception("Item not found.");
             return item;
         }
@@ -48,7 +49,7 @@ namespace BL.Services {
                 Color = model.Color.ToLower(),
                 Description = model.Description,
                 Discount = model.Discount,
-                ImagePath = string.IsNullOrEmpty(model.Image) ? "" : await this.m_imageService.GetImagePathAsync(model.Image),
+                ImagePath = string.IsNullOrEmpty(model.Image) ? "../ImageStore/default.txt" : await this.m_imageService.GetImagePathAsync(model.Image),
                 Kind = model.Kind,
                 Name = model.Name,
                 Price = model.Price,
@@ -74,7 +75,7 @@ namespace BL.Services {
             item.Color = model.Color;
             item.Description = model.Description;
             item.Discount = model.Discount;
-            item.ImagePath = string.IsNullOrEmpty(model.Image) ? "" : await this.m_imageService.GetImagePathAsync(model.Image);
+            item.ImagePath = string.IsNullOrEmpty(model.Image) ? "../ImageStore/default.txt" : await this.m_imageService.GetImagePathAsync(model.Image);
             item.Kind = model.Kind;
             item.Name = model.Name;
             item.Price = model.Price;
@@ -89,11 +90,17 @@ namespace BL.Services {
             if(item.Id <= 0) throw new Exception("Updating error.");
         }
 
-        public async Task<IList<Item>> GetAllItemAsync() {
+        public async Task<IList<Item>> GetAllItemsAsync() {
             var query = await this.m_itemRepository.GetAllAsync();
+            
             var items = await query.AnyAsync();
             if(!items) throw new Exception("Items not found.");
-            return query.ToList();
+            var res= query.ToList();
+            foreach(var item in res) {
+                item.ImagePath = await this.m_imageService.GetBase64StringAsync(item.ImagePath);
+            }
+
+            return res;
         }
 
         public async Task<IList<Item>> GetItemsByKindAsync(ReqItemViewModel item) {

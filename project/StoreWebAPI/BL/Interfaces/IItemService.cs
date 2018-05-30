@@ -12,9 +12,9 @@ namespace BL.Interfaces
 
         Task UpdateItemAsync(UpdateItemViewModel item);
 
-        Task DeleteItemAsync(long id, bool deactive = true);
+        Task DeleteItemAsync(long id, bool deactive = false);
 
-        Task<IList<Item>> GetAllItemAsync();
+        Task<IList<Item>> GetAllItemsAsync();
 
         Task<Item> GetItemAsync(long id);
 

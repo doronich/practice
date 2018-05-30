@@ -23,7 +23,7 @@ namespace StoreWebAPI.Controllers {
             IEnumerable<Item> items;
 
             try {
-                items = await this.m_itemService.GetAllItemAsync();
+                items = await this.m_itemService.GetAllItemsAsync();
                 return this.Json(items);
             } catch(Exception exception) {
                 return this.BadRequest(exception.Message);
