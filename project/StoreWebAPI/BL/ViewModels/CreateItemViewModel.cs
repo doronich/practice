@@ -22,6 +22,9 @@ namespace BL.ViewModels
         public int Amount { get; set; }
         public Sex Sex { get; set; }
 
-        public string Image { get; set; }
+        public string PreviewImagePath { get; set; }
+        public string ImagePath1 { get; set; }
+        public string ImagePath2 { get; set; }
+        public string ImagePath3 { get; set; }
     }
 }

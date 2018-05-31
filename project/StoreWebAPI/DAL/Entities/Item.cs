@@ -7,7 +7,10 @@
         public string Brand { get; set; }
         public decimal Price { get; set; }
         public int Discount { get; set; }
-        public string ImagePath { get; set; }
+        public string PreviewImagePath { get; set; }
+        public string ImagePath1 { get; set; }
+        public string ImagePath2 { get; set; }
+        public string ImagePath3 { get; set; }
         public KindsOfItems Kind { get; set; }
         public string Subkind { get; set; }
         public Statuses Status { get; set; }

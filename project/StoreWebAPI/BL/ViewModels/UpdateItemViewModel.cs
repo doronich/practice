@@ -7,6 +7,7 @@ namespace BL.ViewModels
 {
     public class UpdateItemViewModel
     {
+        public string Username { get; set; }
         public int Id { get; set; }
         public bool Active { get; set; }
         public string Name { get; set; }
@@ -22,6 +23,9 @@ namespace BL.ViewModels
         public int Amount { get; set; }
         public Sex Sex { get; set; }
 
-        public string Image { get; set; }
+        public string PreviewImagePath { get; set; }
+        public string ImagePath1 { get; set; }
+        public string ImagePath2 { get; set; }
+        public string ImagePath3 { get; set; }
     }
 }

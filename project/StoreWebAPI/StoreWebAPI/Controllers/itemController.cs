@@ -17,13 +17,12 @@ namespace StoreWebAPI.Controllers {
             this.m_itemService = itemService;
         }
 
-        //GET: api/item/
+        //GET: api/item/all
         [HttpGet("all")]
         public async Task<IActionResult> All() {
-            IEnumerable<Item> items;
 
             try {
-                items = await this.m_itemService.GetAllItemsAsync();
+                IEnumerable<Item> items = await this.m_itemService.GetAllItemsAsync();
                 return this.Json(items);
             } catch(Exception exception) {
                 return this.BadRequest(exception.Message);
@@ -41,15 +40,6 @@ namespace StoreWebAPI.Controllers {
             } catch(Exception exception) {
                 return this.BadRequest(exception.Message);
             }
-        }
-
-        // POST: api/item
-        [HttpPost("image")]
-        
-        public async Task<IActionResult> LoadImage() {
-            var body = this.Request.Body;
-            var head = this.Request.Headers;
-            return this.Ok();
         }
 
         // GET: api/item/5

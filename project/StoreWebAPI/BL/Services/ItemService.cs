@@ -20,22 +20,21 @@ namespace BL.Services {
         }
 
         //active = false
-        public async Task DeleteItemAsync(long id, bool deactive = false) {
+        public async Task DeleteItemAsync(long id) {
             var item = await this.m_itemRepository.GetByIdAsync(id);
             if(item == null) throw new Exception("Item not found.");
 
-            if(deactive) {
-                item.Active = false;
-                await this.m_itemRepository.UpdateAsync(item);
-            } else {
                 await this.m_itemRepository.DeleteAsync(item);
-            }
+
         }
 
         public async Task<Item> GetItemAsync(long id) {
             var item = await this.m_itemRepository.GetByIdAsync(id);
-            item.ImagePath = await this.m_imageService.GetBase64StringAsync(item.ImagePath);
-            if(item == null) throw new Exception("Item not found.");
+            item.PreviewImagePath = await this.m_imageService.GetBase64StringAsync(item.PreviewImagePath);
+            item.ImagePath1 = string.IsNullOrEmpty(item.ImagePath1) ? "" : await this.m_imageService.GetBase64StringAsync(item.ImagePath1);
+            item.ImagePath2 = string.IsNullOrEmpty(item.ImagePath2) ? "" : await this.m_imageService.GetBase64StringAsync(item.ImagePath2);
+            item.ImagePath3 = string.IsNullOrEmpty(item.ImagePath3) ? "" : await this.m_imageService.GetBase64StringAsync(item.ImagePath3);
+            if (item == null) throw new Exception("Item not found.");
             return item;
         }
 
@@ -49,7 +48,10 @@ namespace BL.Services {
                 Color = model.Color.ToLower(),
                 Description = model.Description,
                 Discount = model.Discount,
-                ImagePath = string.IsNullOrEmpty(model.Image) ? "../ImageStore/default.txt" : await this.m_imageService.GetImagePathAsync(model.Image),
+                PreviewImagePath = model.PreviewImagePath == null ? "../ImageStore/default.png" : await this.m_imageService.GetImagePathAsync(model.PreviewImagePath),
+                ImagePath1 = string.IsNullOrEmpty(model.ImagePath1) ? "": await this.m_imageService.GetImagePathAsync(model.ImagePath1),
+                ImagePath2 = string.IsNullOrEmpty(model.ImagePath2) ? "" : await this.m_imageService.GetImagePathAsync(model.ImagePath2),
+                ImagePath3 = string.IsNullOrEmpty(model.ImagePath3) ? "" : await this.m_imageService.GetImagePathAsync(model.ImagePath3),
                 Kind = model.Kind,
                 Name = model.Name,
                 Price = model.Price,
@@ -64,8 +66,14 @@ namespace BL.Services {
         }
 
         public async Task UpdateItemAsync(UpdateItemViewModel model) {
+
+            async Task<string> NewImage(string path, string image) {
+                this.m_imageService.DeleteImage(path);
+                return await this.m_imageService.GetImagePathAsync(image);
+            }
+
             var item = await this.m_itemRepository.GetByIdAsync(model.Id);
-            if(item == null) throw new Exception("Item not found.");
+            if (item == null) throw new Exception("Item not found.");
 
             item.Active = model.Active;
             item.CreatedBy = "Admin";
@@ -75,7 +83,12 @@ namespace BL.Services {
             item.Color = model.Color;
             item.Description = model.Description;
             item.Discount = model.Discount;
-            item.ImagePath = string.IsNullOrEmpty(model.Image) ? "../ImageStore/default.txt" : await this.m_imageService.GetImagePathAsync(model.Image);
+            item.PreviewImagePath = model.PreviewImagePath == null
+                ? item.PreviewImagePath
+                : await NewImage(item.PreviewImagePath,model.PreviewImagePath);
+            item.ImagePath1 = string.IsNullOrEmpty(model.ImagePath1) ? item.ImagePath1 : await NewImage(item.ImagePath1, model.ImagePath1);
+            item.ImagePath2 = string.IsNullOrEmpty(model.ImagePath2) ? item.ImagePath2 : await NewImage(item.ImagePath2, model.ImagePath2);
+            item.ImagePath3 = string.IsNullOrEmpty(model.ImagePath3) ? item.ImagePath3 : await NewImage(item.ImagePath3, model.ImagePath3);
             item.Kind = model.Kind;
             item.Name = model.Name;
             item.Price = model.Price;
@@ -83,7 +96,7 @@ namespace BL.Services {
             item.Size = model.Size;
             item.Status = model.Status;
             item.Subkind = model.Subkind;
-            item.UpdatedBy = "Admin";
+            item.UpdatedBy = model.Username;
             item.UpdatedDate = DateTime.Now;
 
             await this.m_itemRepository.UpdateAsync(item);
@@ -92,13 +105,11 @@ namespace BL.Services {
 
         public async Task<IList<Item>> GetAllItemsAsync() {
             var query = await this.m_itemRepository.GetAllAsync();
-            
+
             var items = await query.AnyAsync();
             if(!items) throw new Exception("Items not found.");
-            var res= query.ToList();
-            foreach(var item in res) {
-                item.ImagePath = await this.m_imageService.GetBase64StringAsync(item.ImagePath);
-            }
+            var res = query.ToList();
+            foreach(var item in res){ item.PreviewImagePath = await this.m_imageService.GetBase64StringAsync(item.PreviewImagePath);}
 
             return res;
         }

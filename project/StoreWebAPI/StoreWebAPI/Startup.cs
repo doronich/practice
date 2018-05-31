@@ -55,7 +55,6 @@ namespace StoreWebAPI {
                         {
                             // укзывает, будет ли валидироваться издатель при валидации токена
                             ValidateIssuer = true,
-                            
                             // строка, представляющая издателя
                             ValidIssuer = this.Configuration["AuthOptions:ISSUER"],
                             // будет ли валидироваться потребитель токена
