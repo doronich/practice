@@ -1,8 +1,10 @@
+using System.Security.Claims;
 using System.Text;
 using BL.Interfaces;
 using BL.Options;
 using BL.Services;
 using DAL.Context;
+using DAL.Entities;
 using DAL.Interfaces;
 using DAL.Repository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -69,7 +71,10 @@ namespace StoreWebAPI {
                             ValidateIssuerSigningKey = true
                         };
                     });
-
+            services.AddAuthorization(options => {
+                options.AddPolicy("Admin",
+                    policy => policy.RequireRole(UserRoles.Admin.ToString()));
+            });
             services.AddMvc();
         }
 
@@ -85,6 +90,7 @@ namespace StoreWebAPI {
             app.UseCors("CorsPolicy");
             app.UseStaticFiles();
             app.UseAuthentication();
+            
             app.UseMvc();
             
         }

@@ -48,7 +48,7 @@ namespace BL.Services {
                 Color = model.Color.ToLower(),
                 Description = model.Description,
                 Discount = model.Discount,
-                PreviewImagePath = model.PreviewImagePath == null ? "../ImageStore/default.png" : await this.m_imageService.GetImagePathAsync(model.PreviewImagePath),
+                PreviewImagePath = string.IsNullOrEmpty(model.PreviewImagePath) ? "../ImageStore/default.png" : await this.m_imageService.GetImagePathAsync(model.PreviewImagePath),
                 ImagePath1 = string.IsNullOrEmpty(model.ImagePath1) ? "": await this.m_imageService.GetImagePathAsync(model.ImagePath1),
                 ImagePath2 = string.IsNullOrEmpty(model.ImagePath2) ? "" : await this.m_imageService.GetImagePathAsync(model.ImagePath2),
                 ImagePath3 = string.IsNullOrEmpty(model.ImagePath3) ? "" : await this.m_imageService.GetImagePathAsync(model.ImagePath3),

@@ -6,6 +6,7 @@ using BL.ViewModels;
 using DAL.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.WindowsAzure.Storage.Blob;
 
 namespace StoreWebAPI.Controllers {
     [Produces("application/json")]
@@ -18,6 +19,8 @@ namespace StoreWebAPI.Controllers {
         }
 
         //GET: api/item/all
+        [AllowAnonymous]
+        [ResponseCache(Duration = 360)]
         [HttpGet("all")]
         public async Task<IActionResult> All() {
 
@@ -30,6 +33,7 @@ namespace StoreWebAPI.Controllers {
         }
 
         // GET: api/item/q?
+        [AllowAnonymous]
         [HttpGet("q")]
         public async Task<IActionResult> GetBy(ReqItemViewModel item) {
             if(!this.ModelState.IsValid) return this.BadRequest("Incorrect request");
@@ -43,6 +47,7 @@ namespace StoreWebAPI.Controllers {
         }
 
         // GET: api/item/5
+        [AllowAnonymous]
         [HttpGet("{id}", Name = "Get")]
         public async Task<IActionResult> Get(int id) {
             try {
@@ -55,7 +60,7 @@ namespace StoreWebAPI.Controllers {
 
         // POST: api/item
         [HttpPost]
-        [Authorize]
+        [Authorize(Policy = "Admin")]
         public async Task<IActionResult> Post([FromBody] CreateItemViewModel item) {
             if(!this.ModelState.IsValid) return this.BadRequest("Incorrect data.");
 
@@ -68,7 +73,7 @@ namespace StoreWebAPI.Controllers {
         }
 
         // PUT: api/item
-        [Authorize]
+        [Authorize(Policy = "Admin")]
         [HttpPut]
         public async Task<IActionResult> Put([FromBody] UpdateItemViewModel item) {
             if(!this.ModelState.IsValid) return this.BadRequest("Incorrect data.");
@@ -82,7 +87,7 @@ namespace StoreWebAPI.Controllers {
         }
 
         // DELETE: api/item/5
-        [Authorize]
+        [Authorize(Policy = "Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id) {
             try {
@@ -92,5 +97,6 @@ namespace StoreWebAPI.Controllers {
                 return this.BadRequest(exception.Message);
             }
         }
+
     }
 }

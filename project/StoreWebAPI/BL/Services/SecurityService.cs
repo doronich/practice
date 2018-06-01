@@ -69,6 +69,7 @@ namespace BL.Services {
             {
                 acces_token = encodedJwt,
                 username = identity.Name
+  
             };
 
             return JsonConvert.SerializeObject(response, new JsonSerializerSettings { Formatting = Formatting.Indented });
