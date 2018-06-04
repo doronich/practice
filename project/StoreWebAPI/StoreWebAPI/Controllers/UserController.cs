@@ -25,7 +25,6 @@ namespace StoreWebAPI.Controllers {
             } catch(Exception exception) {
                 return this.BadRequest(exception.Message);
             }
-
             return this.Json(user);
         }
 
@@ -44,7 +43,6 @@ namespace StoreWebAPI.Controllers {
         }
 
         [AllowAnonymous]
-        [ValidateAntiForgeryToken]
         [HttpPost("Register")]
         public async Task<IActionResult> RegisterUser([FromBody] RegisterUserViewModel model) {
             if(!this.ModelState.IsValid) return this.BadRequest("Incorrect data.");
@@ -80,7 +78,6 @@ namespace StoreWebAPI.Controllers {
             return this.Ok();
         }
         [AllowAnonymous]
-        [ValidateAntiForgeryToken]
         [HttpPost("Token")]
         public async Task<IActionResult> Token([FromBody] LoginUserViewModel model) {
             if(!this.ModelState.IsValid) return this.BadRequest("Incorrect data.");
@@ -95,9 +92,8 @@ namespace StoreWebAPI.Controllers {
 
         [Authorize]
         [HttpPost("checkToken")]
-        public async Task<IActionResult> CheckToken(string user)
+        public IActionResult CheckToken(string user)
         {
-
             return this.Ok();
         }
     }

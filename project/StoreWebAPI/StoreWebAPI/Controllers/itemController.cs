@@ -6,7 +6,6 @@ using BL.ViewModels;
 using DAL.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.WindowsAzure.Storage.Blob;
 
 namespace StoreWebAPI.Controllers {
     [Produces("application/json")]
@@ -20,10 +19,9 @@ namespace StoreWebAPI.Controllers {
 
         //GET: api/item/all
         [AllowAnonymous]
-        [ResponseCache(Duration = 360)]
+        [ResponseCache(Duration = 30)]
         [HttpGet("all")]
         public async Task<IActionResult> All() {
-
             try {
                 IEnumerable<Item> items = await this.m_itemService.GetAllItemsAsync();
                 return this.Json(items);
@@ -35,6 +33,7 @@ namespace StoreWebAPI.Controllers {
         // GET: api/item/q?
         [AllowAnonymous]
         [HttpGet("q")]
+        [ResponseCache(Duration = 30)]
         public async Task<IActionResult> GetBy(ReqItemViewModel item) {
             if(!this.ModelState.IsValid) return this.BadRequest("Incorrect request");
 
@@ -97,6 +96,5 @@ namespace StoreWebAPI.Controllers {
                 return this.BadRequest(exception.Message);
             }
         }
-
     }
 }

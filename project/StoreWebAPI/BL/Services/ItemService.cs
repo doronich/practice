@@ -197,7 +197,10 @@ namespace BL.Services {
 
             var query = await this.m_itemRepository.GetAllAsync(expressionsList);
             if(query == null) throw new Exception("Some troubles with items!@?1");
-            return query.ToList();
+            var res = query.ToList();
+            foreach (var i in res) { i.PreviewImagePath = await this.m_imageService.GetBase64StringAsync(i.PreviewImagePath); }
+
+            return res;
         }
     }
 }
