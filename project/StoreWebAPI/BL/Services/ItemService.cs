@@ -19,10 +19,14 @@ namespace BL.Services {
             this.m_imageService = imageService;
         }
 
-        //active = false
+        
         public async Task DeleteItemAsync(long id) {
             var item = await this.m_itemRepository.GetByIdAsync(id);
-            if(item == null) throw new Exception("Item not found.");
+            this.m_imageService.DeleteImage(item.PreviewImagePath);
+            this.m_imageService.DeleteImage(item.ImagePath1);
+            this.m_imageService.DeleteImage(item.ImagePath2);
+            this.m_imageService.DeleteImage(item.ImagePath3);
+            if (item == null) throw new Exception("Item not found.");
 
                 await this.m_itemRepository.DeleteAsync(item);
 
@@ -140,13 +144,13 @@ namespace BL.Services {
             if(item.Kind != null) {
                 KindsOfItems kind;
                 switch(item.Kind.ToLower()) {
-                    case "sneakers":
+                    case "1":
                         kind = KindsOfItems.Footwear;
                         break;
-                    case "clothing":
+                    case "2":
                         kind = KindsOfItems.Clothing;
                         break;
-                    case "accessories":
+                    case "3":
                         kind = KindsOfItems.Accessories;
                         break;
                     default:
@@ -191,7 +195,7 @@ namespace BL.Services {
                         break;
                 }
 
-                Expression<Func<Item, bool>> expSex = i => i.Sex == sex;
+                Expression<Func<Item, bool>> expSex = i => i.Sex == sex || i.Sex == Sex.Uni;
                 expressionsList.Add(expSex);
             }
 

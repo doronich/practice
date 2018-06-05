@@ -19,7 +19,7 @@ namespace StoreWebAPI.Controllers {
 
         //GET: api/item/all
         [AllowAnonymous]
-        [ResponseCache(Duration = 30)]
+        [ResponseCache(Duration = 10)]
         [HttpGet("all")]
         public async Task<IActionResult> All() {
             try {
@@ -33,7 +33,7 @@ namespace StoreWebAPI.Controllers {
         // GET: api/item/q?
         [AllowAnonymous]
         [HttpGet("q")]
-        [ResponseCache(Duration = 30)]
+        [ResponseCache(Duration = 10)]
         public async Task<IActionResult> GetBy(ReqItemViewModel item) {
             if(!this.ModelState.IsValid) return this.BadRequest("Incorrect request");
 

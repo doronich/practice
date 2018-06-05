@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using DAL.Entities;
+﻿using DAL.Entities;
 
-namespace BL.ViewModels
-{
-    public class UpdateItemViewModel
-    {
+namespace BL.ViewModels {
+    public class UpdateItemViewModel {
         public string Username { get; set; }
         public int Id { get; set; }
         public bool Active { get; set; }

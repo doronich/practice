@@ -7,10 +7,10 @@ namespace BL.Services {
     public class ImageService : IImageService {
         public async Task<string> GetImagePathAsync(string image) {
             var type = this.GetTypeOfImage(image);
-
+            
             var base64Str = image.Substring(image.IndexOf(',') + 1);
             var bytes = Convert.FromBase64String(base64Str);
-            var name = "../ImageStore/" + DateTime.Now.ToString("yyyyMMddhhmmss") +"."+ type;
+            var name = "../ImageStore/" + DateTime.Now.ToString("yyyyMMddhhmmss") +"R" + new Random().Next(1000)+ "." + type;
 
             await File.WriteAllBytesAsync(name, bytes);
 
@@ -18,21 +18,28 @@ namespace BL.Services {
         }
 
         public async Task<string> GetBase64StringAsync(string path) {
-            string type=String.Empty;
-            string temp = path.Substring(path.LastIndexOf('.')+1);
-            switch (temp) {
+            var type = string.Empty;
+            var temp = path.Substring(path.LastIndexOf('.') + 1);
+            switch(temp) {
                 case "jpeg":
-                case "jpg": type = "jpeg";
+                case "jpg":
+                    type = "jpeg";
                     break;
-                case "png": type = "png";
+                case "png":
+                    type = "png";
                     break;
-                case "gif": type = "gif";
+                case "gif":
+                    type = "gif";
                     break;
             }
+
             var bytes = await File.ReadAllBytesAsync(path);
 
-            return "data:image/"+type+";base64," + Convert.ToBase64String(bytes);
+            return "data:image/" + type + ";base64," + Convert.ToBase64String(bytes);
+        }
 
+        public void DeleteImage(string path) {            
+            if(path != "../ImageStore/default.png" && !string.IsNullOrEmpty(path)) File.Delete(path);
         }
 
         private string GetTypeOfImage(string image) {
@@ -43,10 +50,6 @@ namespace BL.Services {
             res = res.Remove(end);
             if(res != "png" && res != "jpeg" && res != "gif" && res != "pjpeg") throw new Exception("Incorrect image format.");
             return res;
-        }
-
-        public void DeleteImage(string path) {
-            File.Delete(path);
         }
     }
 }
