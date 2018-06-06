@@ -83,8 +83,8 @@ namespace BL.Services {
             item.CreatedBy = "Admin";
             item.CreatedDate = DateTime.Now;
             item.Amount = model.Amount;
-            item.Brand = model.Brand;
-            item.Color = model.Color;
+            item.Brand = model.Brand.ToLower();
+            item.Color = model.Color.ToLower();
             item.Description = model.Description;
             item.Discount = model.Discount;
             item.PreviewImagePath = model.PreviewImagePath == null
@@ -97,9 +97,9 @@ namespace BL.Services {
             item.Name = model.Name;
             item.Price = model.Price;
             item.Sex = model.Sex;
-            item.Size = model.Size;
+            item.Size = model.Size.ToLower();
             item.Status = model.Status;
-            item.Subkind = model.Subkind;
+            item.Subkind = model.Subkind.ToLower();
             item.UpdatedBy = model.Username;
             item.UpdatedDate = DateTime.Now;
 
@@ -122,12 +122,12 @@ namespace BL.Services {
             var expressionsList = new List<Expression<Func<Item, bool>>>();
 
             if(item.Color != null) {
-                Expression<Func<Item, bool>> expColor = i => i.Color == item.Color;
+                Expression<Func<Item, bool>> expColor = i => i.Color == item.Color.ToLower();
                 expressionsList.Add(expColor);
             }
 
             if(item.Brand != null) {
-                Expression<Func<Item, bool>> expBrand = i => i.Brand == item.Brand;
+                Expression<Func<Item, bool>> expBrand = i => i.Brand == item.Brand.ToLower();
                 expressionsList.Add(expBrand);
             }
 
@@ -137,7 +137,7 @@ namespace BL.Services {
             }
 
             if(item.Subkind != null) {
-                Expression<Func<Item, bool>> expSubkind = i => i.Subkind == item.Subkind;
+                Expression<Func<Item, bool>> expSubkind = i => i.Subkind == item.Subkind.ToLower();
                 expressionsList.Add(expSubkind);
             }
 
@@ -199,6 +199,8 @@ namespace BL.Services {
                 expressionsList.Add(expSex);
             }
 
+            Expression<Func<Item, bool>> expRange = i => i.Price <= item.EndPrice && i.Price >=item.StartPrice;
+            expressionsList.Add(expRange);
             var query = await this.m_itemRepository.GetAllAsync(expressionsList);
             if(query == null) throw new Exception("Some troubles with items!@?1");
             var res = query.ToList();

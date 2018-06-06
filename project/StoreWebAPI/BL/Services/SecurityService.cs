@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Security.Claims;
 using System.Text;
@@ -68,7 +69,8 @@ namespace BL.Services {
             var response = new
             {
                 acces_token = encodedJwt,
-                username = identity.Name
+                username = identity.Claims.FirstOrDefault(i => i.Type == "Login")?.Value,
+                role = identity.Claims.FirstOrDefault(i=>i.Type == "Role")?.Value
   
             };
 
@@ -77,6 +79,7 @@ namespace BL.Services {
 
         private async Task<ClaimsIdentity> GetIdentityAsync(LoginUserViewModel model, bool reg) {
             User user= new User();
+            user.Role = UserRoles.User;
             if (!reg)
             {
                 var res = await this.m_userRepository.GetAllAsync(new List<Expression<Func<User, bool>>>{u => u.Login == model.Login});
@@ -89,8 +92,8 @@ namespace BL.Services {
             if (reg)
             {
                 var claims = new List<Claim> {
-                    new Claim(ClaimsIdentity.DefaultNameClaimType, model.Login),
-                    new Claim(ClaimsIdentity.DefaultRoleClaimType, user.Role.ToString())
+                    new Claim("Login", model.Login),
+                    new Claim("Role", user.Role.ToString())
                 };
                 var claimsIdentity = new ClaimsIdentity(claims,
                     "TokenAsync",
