@@ -16,5 +16,6 @@ namespace BL.ViewModels
         public string Sex { get; set; }
         public decimal StartPrice { get; set; }
         public decimal EndPrice { get; set; }
+        public string  Name { get; set; }
     }
 }

@@ -1,10 +1,9 @@
-using System.Security.Claims;
 using System.Text;
+using BL.Chat;
 using BL.Interfaces;
 using BL.Options;
 using BL.Services;
 using DAL.Context;
-using DAL.Entities;
 using DAL.Interfaces;
 using DAL.Repository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -50,11 +49,9 @@ namespace StoreWebAPI {
             });
             //Auth
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                    .AddJwtBearer(options =>
-                    {
+                    .AddJwtBearer(options => {
                         options.RequireHttpsMetadata = false;
-                        options.TokenValidationParameters = new TokenValidationParameters
-                        {
+                        options.TokenValidationParameters = new TokenValidationParameters {
                             // укзывает, будет ли валидироваться издатель при валидации токена
                             ValidateIssuer = true,
                             // строка, представляющая издателя
@@ -72,15 +69,16 @@ namespace StoreWebAPI {
                         };
                     });
             services.AddAuthorization(options => {
-                options.AddPolicy("Admin",
-                    policy => policy.RequireRole(UserRoles.Admin.ToString()));
+                options.AddPolicy("Admin", policy => policy.RequireClaim("Role", "Admin"));
             });
             services.AddMvc();
+
+            services.AddSignalRCore();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env) {
-            if (env.IsDevelopment()) {
+            if(env.IsDevelopment()) {
                 app.UseBrowserLink();
                 app.UseDeveloperExceptionPage();
             } else {
@@ -89,10 +87,10 @@ namespace StoreWebAPI {
 
             app.UseCors("CorsPolicy");
             app.UseStaticFiles();
+            app.UseSignalR(routes => routes.MapHub<ChatHub>("/api/chat"));
             app.UseAuthentication();
-            
+
             app.UseMvc();
-            
         }
     }
 }

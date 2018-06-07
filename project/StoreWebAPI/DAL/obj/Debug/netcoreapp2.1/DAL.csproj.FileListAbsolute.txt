@@ -1,0 +1,11 @@
+D:\practice\first\project\StoreWebAPI\DAL\bin\Debug\netcoreapp2.1\DAL.deps.json
+D:\practice\first\project\StoreWebAPI\DAL\bin\Debug\netcoreapp2.1\DAL.runtimeconfig.json
+D:\practice\first\project\StoreWebAPI\DAL\bin\Debug\netcoreapp2.1\DAL.runtimeconfig.dev.json
+D:\practice\first\project\StoreWebAPI\DAL\bin\Debug\netcoreapp2.1\DAL.dll
+D:\practice\first\project\StoreWebAPI\DAL\bin\Debug\netcoreapp2.1\DAL.pdb
+D:\practice\first\project\StoreWebAPI\DAL\obj\Debug\netcoreapp2.1\DAL.csprojAssemblyReference.cache
+D:\practice\first\project\StoreWebAPI\DAL\obj\Debug\netcoreapp2.1\DAL.csproj.CoreCompileInputs.cache
+D:\practice\first\project\StoreWebAPI\DAL\obj\Debug\netcoreapp2.1\DAL.AssemblyInfoInputs.cache
+D:\practice\first\project\StoreWebAPI\DAL\obj\Debug\netcoreapp2.1\DAL.AssemblyInfo.cs
+D:\practice\first\project\StoreWebAPI\DAL\obj\Debug\netcoreapp2.1\DAL.dll
+D:\practice\first\project\StoreWebAPI\DAL\obj\Debug\netcoreapp2.1\DAL.pdb

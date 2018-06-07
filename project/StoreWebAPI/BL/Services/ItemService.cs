@@ -122,22 +122,22 @@ namespace BL.Services {
             var expressionsList = new List<Expression<Func<Item, bool>>>();
 
             if(item.Color != null) {
-                Expression<Func<Item, bool>> expColor = i => i.Color == item.Color.ToLower();
+                Expression<Func<Item, bool>> expColor = i => String.Equals(i.Color, item.Color, StringComparison.CurrentCultureIgnoreCase);
                 expressionsList.Add(expColor);
             }
 
             if(item.Brand != null) {
-                Expression<Func<Item, bool>> expBrand = i => i.Brand == item.Brand.ToLower();
+                Expression<Func<Item, bool>> expBrand = i => String.Equals(i.Brand, item.Brand, StringComparison.CurrentCultureIgnoreCase);
                 expressionsList.Add(expBrand);
             }
 
             if(item.Size != null) {
-                Expression<Func<Item, bool>> expSize = i => i.Size == item.Size;
+                Expression<Func<Item, bool>> expSize = i => String.Equals(i.Size, item.Size, StringComparison.CurrentCultureIgnoreCase);
                 expressionsList.Add(expSize);
             }
 
             if(item.Subkind != null) {
-                Expression<Func<Item, bool>> expSubkind = i => i.Subkind == item.Subkind.ToLower();
+                Expression<Func<Item, bool>> expSubkind = i => String.Equals(i.Subkind, item.Subkind, StringComparison.CurrentCultureIgnoreCase);
                 expressionsList.Add(expSubkind);
             }
 
@@ -197,6 +197,11 @@ namespace BL.Services {
 
                 Expression<Func<Item, bool>> expSex = i => i.Sex == sex || i.Sex == Sex.Uni;
                 expressionsList.Add(expSex);
+            }
+
+            if(!string.IsNullOrEmpty(item.Name)) {
+                Expression<Func<Item, bool>> expName = i => i.Name.Contains(item.Name, StringComparison.OrdinalIgnoreCase);
+                expressionsList.Add(expName);
             }
 
             Expression<Func<Item, bool>> expRange = i => i.Price <= item.EndPrice && i.Price >=item.StartPrice;
