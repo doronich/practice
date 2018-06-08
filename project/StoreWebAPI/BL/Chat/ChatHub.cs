@@ -1,16 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
 
-namespace BL.Chat
-{
-    public class ChatHub : Hub
-    {
-        public async Task Send(string message,string username,string role)
-        {
-            await this.Clients.All.SendAsync("Send", message, username);
+namespace BL.Chat {
+    public class ChatHub : Hub {
+        public async Task SendMessage(string username, string message) {
+            await this.Clients.All.SendAsync("Send", username, message);
         }
+
+        public async Task SendTyping(string username) {
+            await this.Clients.Others.SendAsync("StartTyping", username);
+
+        }
+
+        public async Task DeleteTyping(string username) {
+            await this.Clients.Others.SendAsync("StopTyping", username);
+        }
+
     }
 }

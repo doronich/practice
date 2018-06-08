@@ -10,7 +10,8 @@
         "dependencies": {
           "BCrypt.Net-Next": "2.1.3",
           "DAL": "1.0.0",
-          "System.IdentityModel.Tokens.Jwt": "5.2.2"
+          "System.IdentityModel.Tokens.Jwt": "5.2.2",
+          "Microsoft.AspNetCore.SignalR.Core": "1.0.0.0"
         },
         "runtime": {
           "BL.dll": {}
@@ -1243,6 +1244,14 @@
         "runtime": {
           "DAL.dll": {}
         }
+      },
+      "Microsoft.AspNetCore.SignalR.Core/1.0.0.0": {
+        "runtime": {
+          "Microsoft.AspNetCore.SignalR.Core.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.18136"
+          }
+        }
       }
     }
   },
@@ -2045,6 +2054,11 @@
     },
     "DAL/1.0.0": {
       "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Microsoft.AspNetCore.SignalR.Core/1.0.0.0": {
+      "type": "reference",
       "serviceable": false,
       "sha512": ""
     }

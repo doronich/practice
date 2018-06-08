@@ -10,3 +10,5 @@ D:\practice\first\project\StoreWebAPI\BL\obj\Debug\netcoreapp2.1\BL.AssemblyInfo
 D:\practice\first\project\StoreWebAPI\BL\obj\Debug\netcoreapp2.1\BL.csproj.CopyComplete
 D:\practice\first\project\StoreWebAPI\BL\obj\Debug\netcoreapp2.1\BL.dll
 D:\practice\first\project\StoreWebAPI\BL\obj\Debug\netcoreapp2.1\BL.pdb
+D:\practice\first\project\StoreWebAPI\BL\bin\Debug\netcoreapp2.1\Microsoft.AspNetCore.SignalR.Core.dll
+D:\practice\first\project\StoreWebAPI\BL\bin\Debug\netcoreapp2.1\Microsoft.AspNetCore.SignalR.Core.xml

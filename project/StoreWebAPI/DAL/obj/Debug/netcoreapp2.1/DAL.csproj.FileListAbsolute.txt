@@ -9,3 +9,6 @@ D:\practice\first\project\StoreWebAPI\DAL\obj\Debug\netcoreapp2.1\DAL.AssemblyIn
 D:\practice\first\project\StoreWebAPI\DAL\obj\Debug\netcoreapp2.1\DAL.AssemblyInfo.cs
 D:\practice\first\project\StoreWebAPI\DAL\obj\Debug\netcoreapp2.1\DAL.dll
 D:\practice\first\project\StoreWebAPI\DAL\obj\Debug\netcoreapp2.1\DAL.pdb
+D:\practice\first\project\StoreWebAPI\DAL\bin\Debug\netcoreapp2.1\Microsoft.AspNetCore.SignalR.Core.dll
+D:\practice\first\project\StoreWebAPI\DAL\bin\Debug\netcoreapp2.1\Microsoft.AspNetCore.SignalR.Core.xml
+D:\practice\first\project\StoreWebAPI\DAL\obj\Debug\netcoreapp2.1\DAL.csproj.CopyComplete
