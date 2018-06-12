@@ -122,17 +122,17 @@ namespace BL.Services {
             var expressionsList = new List<Expression<Func<Item, bool>>>();
 
             if(item.Color != null) {
-                Expression<Func<Item, bool>> expColor = i => String.Equals(i.Color, item.Color, StringComparison.CurrentCultureIgnoreCase);
+                Expression<Func<Item, bool>> expColor = i => i.Color.Contains(item.Color, StringComparison.OrdinalIgnoreCase);
                 expressionsList.Add(expColor);
             }
 
             if(item.Brand != null) {
-                Expression<Func<Item, bool>> expBrand = i => String.Equals(i.Brand, item.Brand, StringComparison.CurrentCultureIgnoreCase);
+                Expression<Func<Item, bool>> expBrand = i => i.Brand.Contains(item.Brand, StringComparison.OrdinalIgnoreCase);
                 expressionsList.Add(expBrand);
             }
 
             if(item.Size != null) {
-                Expression<Func<Item, bool>> expSize = i => String.Equals(i.Size, item.Size, StringComparison.CurrentCultureIgnoreCase);
+                Expression<Func<Item, bool>> expSize = i => i.Size.Contains(item.Size, StringComparison.OrdinalIgnoreCase);
                 expressionsList.Add(expSize);
             }
 
@@ -207,7 +207,7 @@ namespace BL.Services {
             Expression<Func<Item, bool>> expRange = i => i.Price <= item.EndPrice && i.Price >=item.StartPrice;
             expressionsList.Add(expRange);
             var query = await this.m_itemRepository.GetAllAsync(expressionsList);
-            if(query == null) throw new Exception("Some troubles with items!@?1");
+            if(query == null) throw new Exception("Some troubles with items!");
             var res = query.ToList();
             foreach (var i in res) { i.PreviewImagePath = await this.m_imageService.GetBase64StringAsync(i.PreviewImagePath); }
 
