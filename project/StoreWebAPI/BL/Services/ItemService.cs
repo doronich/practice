@@ -213,5 +213,21 @@ namespace BL.Services {
 
             return res;
         }
+
+        public async Task<IList<PreviewItemViewModel>> GetLastAsync(int amount) {
+            var query = await this.m_itemRepository.GetAllAsync();
+            var items = query.Skip(Math.Max(0, query.Count() - amount));
+            if(!items.Any()) throw new Exception("Items not found.");
+            var res = new List<PreviewItemViewModel>();
+            foreach(var item in items) {
+                res.Add(new PreviewItemViewModel {
+                    Id = item.Id,
+                    Name = item.Name,
+                    Image = await this.m_imageService.GetBase64StringAsync(item.PreviewImagePath)
+                });                
+            }
+
+            return res;
+        }
     }
 }

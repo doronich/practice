@@ -44,6 +44,20 @@ namespace StoreWebAPI.Controllers {
                 return this.BadRequest(exception.Message);
             }
         }
+        // GET: api/item/last
+        [AllowAnonymous]
+        [HttpGet("last")]
+        [ResponseCache(Duration = 10)]
+        public async Task<IActionResult> GetLast(int amount = 5) {
+            if(!this.ModelState.IsValid) return this.BadRequest("Incorrect request");
+
+            try {
+                var items = await this.m_itemService.GetLastAsync(amount);
+                return this.Json(items);
+            } catch(Exception exception) {
+                return this.BadRequest(exception.Message);
+            }
+        }
 
         // GET: api/item/5
         [AllowAnonymous]
