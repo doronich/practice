@@ -38,12 +38,13 @@ namespace StoreWebAPI.Controllers {
             if(!this.ModelState.IsValid) return this.BadRequest("Incorrect request");
 
             try {
-                IEnumerable<Item> items = await this.m_itemService.GetItemsByKindAsync(item);
+                var items = await this.m_itemService.GetItemsByKindAsync(item);
                 return this.Json(items);
             } catch(Exception exception) {
                 return this.BadRequest(exception.Message);
             }
         }
+
         // GET: api/item/last
         [AllowAnonymous]
         [HttpGet("last")]
@@ -53,6 +54,21 @@ namespace StoreWebAPI.Controllers {
 
             try {
                 var items = await this.m_itemService.GetLastAsync(amount);
+                return this.Json(items);
+            } catch(Exception exception) {
+                return this.BadRequest(exception.Message);
+            }
+        }
+
+        // GET: api/item/random
+        [AllowAnonymous]
+        [HttpGet("random")]
+        [ResponseCache(Duration = 10)]
+        public async Task<IActionResult> GetRandom(int amount = 6) {
+            if(!this.ModelState.IsValid) return this.BadRequest("Incorrect request");
+
+            try {
+                var items = await this.m_itemService.GetRandomAsync(amount);
                 return this.Json(items);
             } catch(Exception exception) {
                 return this.BadRequest(exception.Message);

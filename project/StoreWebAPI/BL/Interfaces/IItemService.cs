@@ -18,8 +18,9 @@ namespace BL.Interfaces
 
         Task<Item> GetItemAsync(long id);
 
-        Task<IList<Item>> GetItemsByKindAsync(ReqItemViewModel item);
+        Task<Object> GetItemsByKindAsync(ReqItemViewModel item);
 
         Task<IList<PreviewItemViewModel>> GetLastAsync(int amount);
+        Task<IList<PreviewItemViewModel>> GetRandomAsync(int amount);
     }
 }

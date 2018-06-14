@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using DAL.Entities;
-
-namespace BL.ViewModels
-{
-    public class ReqItemViewModel
-    {
+﻿namespace BL.ViewModels {
+    public class ReqItemViewModel {
         public string Color { get; set; }
         public string Brand { get; set; }
         public string Kind { get; set; }
@@ -16,6 +9,8 @@ namespace BL.ViewModels
         public string Sex { get; set; }
         public decimal StartPrice { get; set; }
         public decimal EndPrice { get; set; }
-        public string  Name { get; set; }
+        public string Name { get; set; }
+        public int? PageIndex { get; set; }
+        public int? PageSize { get; set; } = 12;
     }
 }
