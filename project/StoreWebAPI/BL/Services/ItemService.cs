@@ -34,18 +34,19 @@ namespace BL.Services {
 
         public async Task<Item> GetItemAsync(long id) {
             var item = await this.m_itemRepository.GetByIdAsync(id);
+            if(item == null) throw new Exception("Item not found.");
             item.PreviewImagePath = await this.m_imageService.GetBase64StringAsync(item.PreviewImagePath);
             item.ImagePath1 = string.IsNullOrEmpty(item.ImagePath1) ? "" : await this.m_imageService.GetBase64StringAsync(item.ImagePath1);
             item.ImagePath2 = string.IsNullOrEmpty(item.ImagePath2) ? "" : await this.m_imageService.GetBase64StringAsync(item.ImagePath2);
             item.ImagePath3 = string.IsNullOrEmpty(item.ImagePath3) ? "" : await this.m_imageService.GetBase64StringAsync(item.ImagePath3);
-            if(item == null) throw new Exception("Item not found.");
+            
             return item;
         }
 
         public async Task InsertItemAsync(CreateItemViewModel model) {
             var item = new Item {
                 Active = model.Active,
-                CreatedBy = "Admin",
+                CreatedBy = model.CreatedBy,
                 CreatedDate = DateTime.Now,
                 Amount = model.Amount,
                 Brand = model.Brand.ToLower(),
@@ -255,6 +256,26 @@ namespace BL.Services {
             }
 
             return res;
+        }
+
+        public async Task<IList<ShopCartViewModel>> GetToCartAsync(long[] itemsId) {
+            IList<ShopCartViewModel> list = new List<ShopCartViewModel>();
+            foreach(var id in itemsId) {
+                try {
+                    var item = await this.GetItemAsync(id);
+                    list.Add(new ShopCartViewModel
+                    {
+                        Id = item.Id,
+                        Name = item.Name,
+                        Price = item.Price
+                    });
+                } catch(Exception exception) {
+                    continue;
+                }
+            }
+            if(list.Count==0) throw new Exception("Items not found");
+
+            return list;
         }
     }
 }

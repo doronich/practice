@@ -30,6 +30,20 @@ namespace StoreWebAPI.Controllers {
             }
         }
 
+        //GET: api/item/cart
+        [AllowAnonymous]
+        [ResponseCache(Duration = 10)]
+        [HttpGet("cart")]
+        public async Task<IActionResult> GetToCart([FromQuery]string[] itemsId) {
+            var temp = Array.ConvertAll(itemsId, long.Parse);
+            try {
+                IEnumerable<ShopCartViewModel> items = await this.m_itemService.GetToCartAsync(temp);
+                return this.Json(items);
+            } catch(Exception exception) {
+                return this.BadRequest(exception.Message);
+            }
+        }
+
         // GET: api/item/q?
         [AllowAnonymous]
         [HttpGet("q")]

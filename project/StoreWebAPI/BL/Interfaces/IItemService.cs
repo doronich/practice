@@ -22,5 +22,7 @@ namespace BL.Interfaces
 
         Task<IList<PreviewItemViewModel>> GetLastAsync(int amount);
         Task<IList<PreviewItemViewModel>> GetRandomAsync(int amount);
+
+        Task<IList<ShopCartViewModel>> GetToCartAsync(long[] itemsId);
     }
 }

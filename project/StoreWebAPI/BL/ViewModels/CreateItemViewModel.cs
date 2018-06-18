@@ -21,7 +21,7 @@ namespace BL.ViewModels
         public string Size { get; set; }
         public int Amount { get; set; }
         public Sex Sex { get; set; }
-
+        public string CreatedBy { get; set; }
         public string PreviewImagePath { get; set; }
         public string ImagePath1 { get; set; }
         public string ImagePath2 { get; set; }
