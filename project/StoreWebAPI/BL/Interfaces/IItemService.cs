@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using BL.ViewModels;
 using DAL.Entities;
 
-namespace BL.Interfaces
-{
+namespace BL.Interfaces {
     public interface IItemService {
         Task InsertItemAsync(CreateItemViewModel item);
 
@@ -18,9 +15,10 @@ namespace BL.Interfaces
 
         Task<Item> GetItemAsync(long id);
 
-        Task<Object> GetItemsByKindAsync(ReqItemViewModel item);
+        Task<object> GetItemsByKindAsync(ReqItemViewModel item);
 
         Task<IList<PreviewItemViewModel>> GetLastAsync(int amount);
+
         Task<IList<PreviewItemViewModel>> GetRandomAsync(int amount);
 
         Task<IList<ShopCartViewModel>> GetToCartAsync(long[] itemsId);
