@@ -5,6 +5,6 @@
         public long ItemId { get; set; }
         public string Name { get; set; }
         public int Amount { get; set; }
-        public Order Order { get; set; }
+        public long OrderId { get; set; }
     }
 }

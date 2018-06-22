@@ -6,6 +6,7 @@ using BL.Interfaces;
 using BL.ViewModels;
 using DAL.Entities;
 using DAL.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace BL.Services {
     public class OrderService : IOrderService {
@@ -25,7 +26,7 @@ namespace BL.Services {
                 CreatedDate = DateTime.Now,
                 Name = model.Name,
                 PhoneNumber = model.PhoneNumber,
-                Items = model.Items,
+                OrderItems = model.Items,
                 TotalPrice = model.TotalPrice
             };
 
@@ -34,10 +35,11 @@ namespace BL.Services {
             if(order.Id <= 0) throw new Exception("Creating order error.");
         }
 
-        public async Task<IList<Order>> GetOrdersAsync() {
-            var orders = await this.m_orderRepository.GetAllAsync();
+        public async Task<IList<Order>> GetOrdersAsync() {          
+            var orders = await this.m_orderRepository.GetAllAsync(/*null, new []{"OrderItems"}*/);
             if(!orders.Any()) throw new Exception("Orders not found");
-            return orders.ToList();
+            var result = orders.ToList();
+            return result;
         }
     }
 }

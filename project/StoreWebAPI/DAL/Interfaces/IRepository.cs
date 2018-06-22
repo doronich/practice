@@ -11,7 +11,7 @@ namespace DAL.Interfaces {
 
         Task<TEntity> GetByIdAsync(long id);
 
-        Task<IQueryable<TEntity>> GetAllAsync(IEnumerable<Expression<Func<TEntity, bool>>> predicate = null);
+        Task<IQueryable<TEntity>> GetAllAsync(IEnumerable<Expression<Func<TEntity, bool>>> predicate = null, string[] includes = null);
 
         Task UpdateAsync(TEntity item);
 

@@ -121,7 +121,7 @@ namespace DAL.Migrations
 
                     b.Property<string>("Name");
 
-                    b.Property<long?>("OrderId");
+                    b.Property<long>("OrderId");
 
                     b.Property<decimal>("Price");
 
@@ -176,8 +176,9 @@ namespace DAL.Migrations
             modelBuilder.Entity("DAL.Entities.OrderItem", b =>
                 {
                     b.HasOne("DAL.Entities.Order", "Order")
-                        .WithMany("Items")
-                        .HasForeignKey("OrderId");
+                        .WithMany("OrderItems")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }

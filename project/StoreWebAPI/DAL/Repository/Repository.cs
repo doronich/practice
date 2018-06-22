@@ -27,12 +27,14 @@ namespace DAL.Repository {
             await this.m_context.SaveChangesAsync();
         }
 
-        public async Task<IQueryable<TEntity>> GetAllAsync(IEnumerable<Expression<Func<TEntity, bool>>> predicate = null) {
+        public async Task<IQueryable<TEntity>> GetAllAsync(IEnumerable<Expression<Func<TEntity, bool>>> predicate = null, string[] includes = null) {
             return await Task.Run(() => {
-                if(predicate == null) return this.m_dbSet;
-
                 var set = this.m_dbSet.AsQueryable();
-                return predicate.Aggregate(set, (current, pr) => current.Where(pr));
+                if(includes != null) {
+                    set = includes.Aggregate(set, (current, inc) => current.Include(inc));
+                }
+                
+                return predicate == null ? set : predicate.Aggregate(set, (current, pr) => current.Where(pr));
             });
         }
 
