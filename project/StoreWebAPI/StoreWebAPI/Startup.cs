@@ -9,6 +9,7 @@ using DAL.Repository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -73,7 +74,7 @@ namespace StoreWebAPI {
                 options.AddPolicy("Admin", policy => policy.RequireClaim("Role", "Admin"));
             });
             services.AddSignalR();
-            services.AddMvc();
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
 
         }
@@ -81,10 +82,12 @@ namespace StoreWebAPI {
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env) {
             if(env.IsDevelopment()) {
-                app.UseBrowserLink();
+                //app.UseBrowserLink();
                 app.UseDeveloperExceptionPage();
+                
             } else {
-                app.UseExceptionHandler("/Error");
+                app.UseHsts();
+                //app.UseExceptionHandler("/Error");
             }
 
             app.UseCors("CorsPolicy");

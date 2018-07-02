@@ -3,6 +3,12 @@
     <TargetFramework>netcoreapp2.1</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="Pages\**" />
+    <Content Remove="Pages\**" />
+    <EmbeddedResource Remove="Pages\**" />
+    <None Remove="Pages\**" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.1.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.0" />
   </ItemGroup>
@@ -12,16 +18,6 @@
   <ItemGroup>
     <Folder Include="App\" />
     <Folder Include="Models\" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Pages\About.cshtml" />
-    <None Include="Pages\Contact.cshtml" />
-    <None Include="Pages\Error.cshtml" />
-    <None Include="Pages\Index.cshtml" />
-    <None Include="Pages\_Layout.cshtml" />
-    <None Include="Pages\_ValidationScriptsPartial.cshtml" />
-    <None Include="Pages\_ViewImports.cshtml" />
-    <None Include="Pages\_ViewStart.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BL\BL.csproj" />
