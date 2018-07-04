@@ -4,7 +4,6 @@ D:\practice\first\project\StoreWebAPI\StoreWebAPI\bin\Debug\netcoreapp2.1\StoreW
 D:\practice\first\project\StoreWebAPI\StoreWebAPI\bin\Debug\netcoreapp2.1\StoreWebAPI.dll
 D:\practice\first\project\StoreWebAPI\StoreWebAPI\bin\Debug\netcoreapp2.1\StoreWebAPI.pdb
 D:\practice\first\project\StoreWebAPI\StoreWebAPI\bin\Debug\netcoreapp2.1\StoreWebAPI.Views.dll
-D:\practice\first\project\StoreWebAPI\StoreWebAPI\bin\Debug\netcoreapp2.1\StoreWebAPI.Views.pdb
 D:\practice\first\project\StoreWebAPI\StoreWebAPI\bin\Debug\netcoreapp2.1\BL.dll
 D:\practice\first\project\StoreWebAPI\StoreWebAPI\bin\Debug\netcoreapp2.1\DAL.dll
 D:\practice\first\project\StoreWebAPI\StoreWebAPI\bin\Debug\netcoreapp2.1\BL.pdb
