@@ -32,6 +32,7 @@ namespace StoreWebAPI.Controllers {
         }
 
         [HttpGet("{id}")]
+        [ResponseCache(Duration = 60)]
         [Authorize(Policy = "Admin")]
         public async Task<IActionResult> GetOrderItems(long id)
         {
