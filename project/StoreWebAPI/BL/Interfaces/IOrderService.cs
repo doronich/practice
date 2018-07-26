@@ -8,5 +8,7 @@ namespace BL.Interfaces {
         Task CreateOrderAsync(CreateOrderViewModel order);
 
         Task<IList<Order>> GetOrdersAsync();
+
+        Task<IList<OrderItem>> GetOrderItemsAsync(long id);
     }
 }

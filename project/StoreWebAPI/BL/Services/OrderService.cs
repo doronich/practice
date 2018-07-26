@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using BL.Interfaces;
 using BL.ViewModels;
 using DAL.Entities;
 using DAL.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace BL.Services {
     public class OrderService : IOrderService {
@@ -38,6 +40,14 @@ namespace BL.Services {
             var orders = await this.m_orderRepository.GetAllAsync( /*null, new []{"OrderItems"}*/);
             if(!orders.Any()) throw new Exception("Orders not found");
             var result = orders.ToList();
+            return result;
+        }
+
+        public async Task<IList<OrderItem>> GetOrderItemsAsync(long id) {
+            var order = await this.m_orderRepository.GetAllAsync(new List<Expression<Func<Order, bool>>>(){i=>i.Id==id},new []{"OrderItems"});
+            var list= await order.ToListAsync();
+            var result = list[0].OrderItems.ToList();
+
             return result;
         }
     }

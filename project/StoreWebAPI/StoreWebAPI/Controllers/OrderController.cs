@@ -19,14 +19,28 @@ namespace StoreWebAPI.Controllers {
             this.m_orderService = orderService;
         }
 
-        // GET: api/order
-        [HttpGet]
+        // GET: api/orders
+        [HttpGet("orders")]
         [Authorize(Policy = "Admin")]
         public async Task<IActionResult> GetAll() {
             try {
                 var result = await this.m_orderService.GetOrdersAsync();
                 return this.Json(result);
             } catch(Exception exception) {
+                return this.BadRequest(exception.Message);
+            }
+        }
+
+        [HttpGet("{id}")]
+        [Authorize(Policy = "Admin")]
+        public async Task<IActionResult> GetOrderItems(long id)
+        {
+            try {
+                var result = await this.m_orderService.GetOrderItemsAsync(id);
+                return this.Json(result);
+            }
+            catch (Exception exception)
+            {
                 return this.BadRequest(exception.Message);
             }
         }
