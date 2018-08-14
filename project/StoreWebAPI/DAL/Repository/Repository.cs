@@ -8,13 +8,11 @@ using DAL.Entities;
 using DAL.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-//написать exceptions
 namespace DAL.Repository {
     public class Repository<TEntity> : IRepository<TEntity> where TEntity : BaseEntity {
         private readonly ApplicationContext m_context;
 
         private readonly DbSet<TEntity> m_dbSet;
-        //private string errorMessage = string.Empty;
 
         public Repository(ApplicationContext context) {
             this.m_context = context;

@@ -1,3 +1,4 @@
+using System;
 using System.Text;
 using BL.Chat;
 using BL.Interfaces;
@@ -67,7 +68,8 @@ namespace StoreWebAPI {
                             // установка ключа безопасности
                             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(this.Configuration["AuthOptions:KEY"])),
                             // валидация ключа безопасности
-                            ValidateIssuerSigningKey = true
+                            ValidateIssuerSigningKey = true,
+                            ClockSkew = TimeSpan.Zero
                         };
                     });
             services.AddAuthorization(options => {
@@ -75,6 +77,8 @@ namespace StoreWebAPI {
             });
             services.AddSignalR();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+            services.AddLogging();
 
 
         }

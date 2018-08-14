@@ -1,0 +1,14 @@
+D:\practice\first\project\StoreWebAPI\BL\bin\Release\netcoreapp2.1\BL.deps.json
+D:\practice\first\project\StoreWebAPI\BL\bin\Release\netcoreapp2.1\BL.dll
+D:\practice\first\project\StoreWebAPI\BL\bin\Release\netcoreapp2.1\BL.pdb
+D:\practice\first\project\StoreWebAPI\BL\bin\Release\netcoreapp2.1\DAL.dll
+D:\practice\first\project\StoreWebAPI\BL\bin\Release\netcoreapp2.1\Microsoft.AspNetCore.SignalR.Core.dll
+D:\practice\first\project\StoreWebAPI\BL\bin\Release\netcoreapp2.1\DAL.pdb
+D:\practice\first\project\StoreWebAPI\BL\bin\Release\netcoreapp2.1\Microsoft.AspNetCore.SignalR.Core.xml
+D:\practice\first\project\StoreWebAPI\BL\obj\Release\netcoreapp2.1\BL.csprojAssemblyReference.cache
+D:\practice\first\project\StoreWebAPI\BL\obj\Release\netcoreapp2.1\BL.csproj.CoreCompileInputs.cache
+D:\practice\first\project\StoreWebAPI\BL\obj\Release\netcoreapp2.1\BL.AssemblyInfoInputs.cache
+D:\practice\first\project\StoreWebAPI\BL\obj\Release\netcoreapp2.1\BL.AssemblyInfo.cs
+D:\practice\first\project\StoreWebAPI\BL\obj\Release\netcoreapp2.1\BL.csproj.CopyComplete
+D:\practice\first\project\StoreWebAPI\BL\obj\Release\netcoreapp2.1\BL.dll
+D:\practice\first\project\StoreWebAPI\BL\obj\Release\netcoreapp2.1\BL.pdb
