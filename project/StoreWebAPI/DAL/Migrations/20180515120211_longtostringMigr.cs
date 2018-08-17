@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace DAL.Migrations
+namespace DL.Migrations
 {
     public partial class longtostringMigr : Migration
     {

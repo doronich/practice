@@ -1,12 +1,12 @@
 using System;
 using System.Text;
-using BL.Chat;
-using BL.Interfaces;
-using BL.Options;
-using BL.Services;
-using DAL.Context;
-using DAL.Interfaces;
-using DAL.Repository;
+using ClothingStore.Repository.Context;
+using ClothingStore.Repository.Interfaces;
+using ClothingStore.Repository.Repository;
+using ClothingStore.Service.Chat;
+using ClothingStore.Service.Interfaces;
+using ClothingStore.Service.Services;
+using ClothingStore.Service.Settings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -14,9 +14,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using Swashbuckle.AspNetCore.Swagger;
 
-namespace StoreWebAPI {
+namespace ClothingStore {
     public class Startup {
         public Startup(IConfiguration configuration) {
             this.Configuration = configuration;
@@ -78,21 +80,20 @@ namespace StoreWebAPI {
             services.AddSignalR();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
+            services.AddSwaggerGen(options => {
+                options.SwaggerDoc("v1", new Info { Title = "StoreWebAPI API", Version = "v1" });
+            });
+
             services.AddLogging();
-
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env) {
-            if(env.IsDevelopment()) {
-                //app.UseBrowserLink();
-                app.UseDeveloperExceptionPage();
-                
-            } else {
-                app.UseHsts();
-                //app.UseExceptionHandler("/Error");
-            }
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory) {
+            loggerFactory.AddConsole(LogLevel.Debug);
+            loggerFactory.AddDebug();
+
+            if(env.IsDevelopment()) app.UseDeveloperExceptionPage();
+            else app.UseHsts();
 
             app.UseCors("CorsPolicy");
             app.UseStaticFiles();
@@ -100,6 +101,11 @@ namespace StoreWebAPI {
             app.UseAuthentication();
 
             app.UseMvc();
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c => {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "StoreWebAPI API");
+            });
         }
     }
 }

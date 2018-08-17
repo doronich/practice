@@ -1,4 +1,4 @@
-﻿namespace BL.Additional {
+﻿namespace ClothingStore.Service.Additional {
     public class BcryptHash {
         private const string HARD_CODED_SALT = "&N*3k#";
 

@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using BL.Interfaces;
-using BL.ViewModels;
-using DAL.Entities;
-using DAL.Interfaces;
-using DAL.Pagination;
+using ClothingStore.Service.Pagination;
+using ClothingStore.Data.Entities;
+using ClothingStore.Repository.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using ClothingStore.Service.Interfaces;
+using ClothingStore.Service.Models;
 
-namespace BL.Services {
+namespace ClothingStore.Service.Services {
     public class ItemService : IItemService {
         private readonly IImageService m_imageService;
         private readonly IRepository<Item> m_itemRepository;
@@ -39,11 +39,11 @@ namespace BL.Services {
             item.ImagePath1 = string.IsNullOrEmpty(item.ImagePath1) ? "" : await this.m_imageService.GetBase64StringAsync(item.ImagePath1);
             item.ImagePath2 = string.IsNullOrEmpty(item.ImagePath2) ? "" : await this.m_imageService.GetBase64StringAsync(item.ImagePath2);
             item.ImagePath3 = string.IsNullOrEmpty(item.ImagePath3) ? "" : await this.m_imageService.GetBase64StringAsync(item.ImagePath3);
-            
+
             return item;
         }
 
-        public async Task InsertItemAsync(CreateItemViewModel model) {
+        public async Task InsertItemAsync(CreateItemDTO model) {
             var item = new Item {
                 Active = model.Active,
                 CreatedBy = model.CreatedBy,
@@ -72,7 +72,7 @@ namespace BL.Services {
             if(item.Id <= 0) throw new Exception("Creating error.");
         }
 
-        public async Task UpdateItemAsync(UpdateItemViewModel model) {
+        public async Task UpdateItemAsync(UpdateItemDTO model) {
             async Task<string> NewImage(string path, string image) {
                 this.m_imageService.DeleteImage(path);
                 return await this.m_imageService.GetImagePathAsync(image);
@@ -120,7 +120,7 @@ namespace BL.Services {
             return res;
         }
 
-        public async Task<object> GetItemsByKindAsync(ReqItemViewModel item) {
+        public async Task<object> GetItemsByKindAsync(ReqItemDTO item) {
             var expressionsList = new List<Expression<Func<Item, bool>>>();
 
             if(item.Color != null) {
@@ -184,21 +184,21 @@ namespace BL.Services {
             }
 
             if(item.Sex != null) {
-                Sex sex;
+                Gender gender;
                 switch(item.Sex.ToLower()) {
                     case "male":
-                        sex = Sex.Male;
+                        gender = Gender.Male;
                         break;
                     case "female":
-                        sex = Sex.Female;
+                        gender = Gender.Female;
                         break;
                     default:
-                        sex = Sex.Uni;
+                        gender = Gender.Uni;
                         break;
                 }
 
-                Expression<Func<Item, bool>> expSex = i => i.Sex == sex || i.Sex == Sex.Uni;
-                expressionsList.Add(expSex);
+                Expression<Func<Item, bool>> expGender = i => i.Sex == gender || i.Sex == Gender.Uni;
+                expressionsList.Add(expGender);
             }
 
             if(!string.IsNullOrEmpty(item.Name)) {
@@ -210,21 +210,21 @@ namespace BL.Services {
             expressionsList.Add(expRange);
             var query = await this.m_itemRepository.GetAllAsync(expressionsList);
 
-            var result = await PaginationList<Item>.CreateAsync(query.AsNoTracking(), item.PageIndex ?? 1, item.PageSize?? 12);
-            
-            if (result == null) throw new Exception("Some troubles with items!");
+            var result = await PaginationList<Item>.CreateAsync(query.AsNoTracking(), item.PageIndex ?? 1, item.PageSize ?? 12);
+
+            if(result == null) throw new Exception("Some troubles with items!");
             foreach(var i in result) i.PreviewImagePath = await this.m_imageService.GetBase64StringAsync(i.PreviewImagePath);
 
-            return new { res=result,hasPrev = result.HasPreviousPage, hasNext=result.HasNextPage, total = result.TotalPages, index = result.PageIndex };
+            return new { res = result, hasPrev = result.HasPreviousPage, hasNext = result.HasNextPage, total = result.TotalPages, index = result.PageIndex };
         }
 
-        public async Task<IList<PreviewItemViewModel>> GetLastAsync(int amount) {
+        public async Task<IList<PreviewItemDTO>> GetLastAsync(int amount) {
             var query = await this.m_itemRepository.GetAllAsync();
             var items = query.Skip(Math.Max(0, query.Count() - amount));
             if(!items.Any()) throw new Exception("Items not found.");
-            var res = new List<PreviewItemViewModel>();
+            var res = new List<PreviewItemDTO>();
             foreach(var item in items)
-                res.Add(new PreviewItemViewModel {
+                res.Add(new PreviewItemDTO {
                     Id = item.Id,
                     Name = item.Name,
                     Image = await this.m_imageService.GetBase64StringAsync(item.PreviewImagePath)
@@ -233,9 +233,9 @@ namespace BL.Services {
             return res;
         }
 
-        public async Task<IList<PreviewItemViewModel>> GetRandomAsync(int amount) {
+        public async Task<IList<PreviewItemDTO>> GetRandomAsync(int amount) {
             var query = await this.m_itemRepository.GetAllAsync();
-            var res = new List<PreviewItemViewModel>();
+            var res = new List<PreviewItemDTO>();
             if(!query.Any()) throw new Exception("Items not found.");
 
             var list = new List<int>();
@@ -247,7 +247,7 @@ namespace BL.Services {
                 list.Add(toSkip);
 
                 var item = await query.Skip(toSkip).Take(1).FirstAsync();
-                res.Add(new PreviewItemViewModel {
+                res.Add(new PreviewItemDTO {
                     Id = item.Id,
                     Name = item.Name,
                     Image = await this.m_imageService.GetBase64StringAsync(item.PreviewImagePath)
@@ -258,22 +258,21 @@ namespace BL.Services {
             return res;
         }
 
-        public async Task<IList<ShopCartViewModel>> GetToCartAsync(long[] itemsId) {
-            IList<ShopCartViewModel> list = new List<ShopCartViewModel>();
-            foreach(var id in itemsId) {
+        public async Task<IList<ShopCartDTO>> GetToCartAsync(long[] itemsId) {
+            IList<ShopCartDTO> list = new List<ShopCartDTO>();
+            foreach(var id in itemsId)
                 try {
                     var item = await this.GetItemAsync(id);
-                    list.Add(new ShopCartViewModel
-                    {
+                    list.Add(new ShopCartDTO {
                         Id = item.Id,
                         Name = item.Name,
                         Price = item.Price
                     });
-                } catch(Exception exception) {
-                    continue;
+                } catch {
+                    // ignored
                 }
-            }
-            if(list.Count==0) throw new Exception("Items not found");
+
+            if(list.Count == 0) throw new Exception("Items not found");
 
             return list;
         }

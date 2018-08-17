@@ -1,9 +1,9 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
-using BL.Interfaces;
+using ClothingStore.Service.Interfaces;
 
-namespace BL.Services {
+namespace ClothingStore.Service.Services {
     public class ImageService : IImageService {
         public async Task<string> GetImagePathAsync(string image) {
             var type = this.GetTypeOfImage(image);

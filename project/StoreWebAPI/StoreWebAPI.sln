@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27703.2000
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StoreWebAPI", "StoreWebAPI\StoreWebAPI.csproj", "{2C32AD7E-6991-421F-9060-9D38872F072B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClothingStore.API", "StoreWebAPI\ClothingStore.API.csproj", "{2C32AD7E-6991-421F-9060-9D38872F072B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BL", "BL\BL.csproj", "{4C9BB0E6-3187-41E2-ABC4-F813B0BDF519}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClothingStore.Service", "BL\ClothingStore.Service.csproj", "{4C9BB0E6-3187-41E2-ABC4-F813B0BDF519}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DAL", "DAL\DAL.csproj", "{9FA701D0-EE3A-410A-9644-78504C485C2E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClothingStore.Repository", "DAL\ClothingStore.Repository.csproj", "{9FA701D0-EE3A-410A-9644-78504C485C2E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{30E14780-7E4E-4CB4-A20D-92F45D8B5D0C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClothingStore.Data", "ClothingStore.Data\ClothingStore.Data.csproj", "{0895E7AE-5B1D-44E9-9EF6-4D812E179F71}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,10 +29,10 @@ Global
 		{9FA701D0-EE3A-410A-9644-78504C485C2E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9FA701D0-EE3A-410A-9644-78504C485C2E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9FA701D0-EE3A-410A-9644-78504C485C2E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{30E14780-7E4E-4CB4-A20D-92F45D8B5D0C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{30E14780-7E4E-4CB4-A20D-92F45D8B5D0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{30E14780-7E4E-4CB4-A20D-92F45D8B5D0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{30E14780-7E4E-4CB4-A20D-92F45D8B5D0C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0895E7AE-5B1D-44E9-9EF6-4D812E179F71}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0895E7AE-5B1D-44E9-9EF6-4D812E179F71}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0895E7AE-5B1D-44E9-9EF6-4D812E179F71}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0895E7AE-5B1D-44E9-9EF6-4D812E179F71}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

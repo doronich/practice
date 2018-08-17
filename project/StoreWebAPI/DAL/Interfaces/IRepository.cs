@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using DAL.Entities;
+using ClothingStore.Data.Entities;
+using ClothingStore.Repository.Context;
 
-namespace DAL.Interfaces {
+namespace ClothingStore.Repository.Interfaces {
     public interface IRepository<TEntity> where TEntity : BaseEntity {
         Task CreateAsync(TEntity item);
 
@@ -18,5 +19,7 @@ namespace DAL.Interfaces {
         Task DeleteAsync(TEntity item);
 
         Task<bool> ExistAsync(Expression<Func<TEntity, bool>> predicate);
+
+        ApplicationContext m_context { get; set; }
     }
 }

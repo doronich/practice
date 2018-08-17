@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace DAL.Migrations
+namespace DL.Migrations
 {
     public partial class OrderChange : Migration
     {

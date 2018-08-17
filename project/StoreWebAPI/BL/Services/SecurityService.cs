@@ -6,18 +6,19 @@ using System.Linq.Expressions;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using BL.Additional;
-using BL.Interfaces;
-using BL.Options;
-using BL.ViewModels;
-using DAL.Entities;
-using DAL.Interfaces;
+using ClothingStore.Service.Settings;
+using ClothingStore.Data.Entities;
+using ClothingStore.Repository.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
+using ClothingStore.Service.Additional;
+using ClothingStore.Service.Interfaces;
+using ClothingStore.Service.Models;
+using ClothingStore.Service.Models.User;
 
-namespace BL.Services {
+namespace ClothingStore.Service.Services {
     public class SecurityService : ISecurityService {
         private readonly IRepository<User> m_userRepository;
 
@@ -30,27 +31,44 @@ namespace BL.Services {
 
         #region public methods
 
-        public async Task<string> GetTokenAsync(LoginUserViewModel model, bool reg = false)
-        {
+        public async Task<string> GetTokenAsync(LoginUserDTO model, bool reg = false) {
             return await this.TokenAsync(model, reg);
         }
 
-        public async Task<string> EncryptPasswordAsync(string pass)
-        {
+        public async Task<string> EncryptPasswordAsync(string pass) {
             return await Task.Run(() => BcryptHash.GenerateBcryptHash(pass));
+        }
+
+        public async Task<string> ChangePasswordAsync(ChangePasswordDTO model) {
+            if(this.ValidatePassword(model.CurrentPassword) && this.ValidatePassword(model.NewPassword)) {
+                var user = await this.m_userRepository.GetByIdAsync(model.Id);
+
+                if(user==null) throw new Exception("User not found.");
+
+                if (BcryptHash.CheckBcryptPassword(model.CurrentPassword,user.Password)) {
+                    user.Password = await this.EncryptPasswordAsync(model.NewPassword);
+                    await this.m_userRepository.UpdateAsync(user);
+                    return "ok";
+                } else {
+                    throw new Exception("Incorrect password.");
+                }
+            } else {
+                throw new Exception("Password is empty.");
+            }
         }
 
         #endregion
 
         #region private methods
 
-        private async Task<SymmetricSecurityKey> GetSymmetricSecurityKeyAsync()
-        {
+        private bool ValidatePassword(string pass) {
+            return !string.IsNullOrWhiteSpace(pass);
+        }
+        private async Task<SymmetricSecurityKey> GetSymmetricSecurityKeyAsync() {
             return await Task.Run(() => new SymmetricSecurityKey(Encoding.UTF8.GetBytes(this.Settings.Key)));
         }
 
-        private async Task<string> TokenAsync(LoginUserViewModel model, bool reg)
-        {
+        private async Task<string> TokenAsync(LoginUserDTO model, bool reg) {
             var identity = await this.GetIdentityAsync(model, reg);
             //if (identity == null) throw new Exception("Invalid login or password.");
 
@@ -58,39 +76,35 @@ namespace BL.Services {
             var jwt = new JwtSecurityToken(
                 this.Settings.Issuer,
                 this.Settings.Audience,
-                notBefore: now,
-                claims: identity.Claims,
-                expires: now.Add(TimeSpan.FromMinutes(this.Settings.Lifetime)),
-                signingCredentials: new SigningCredentials(await this.GetSymmetricSecurityKeyAsync(),
+                notBefore : now,
+                claims : identity.Claims,
+                expires : now.Add(TimeSpan.FromMinutes(this.Settings.Lifetime)),
+                signingCredentials : new SigningCredentials(await this.GetSymmetricSecurityKeyAsync(),
                     SecurityAlgorithms.HmacSha256));
 
             var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
 
-            var response = new
-            {
+            var response = new {
                 acces_token = encodedJwt,
                 username = identity.Claims.FirstOrDefault(i => i.Type == "Login")?.Value,
-                role = identity.Claims.FirstOrDefault(i=>i.Type == "Role")?.Value
-  
+                role = identity.Claims.FirstOrDefault(i => i.Type == "Role")?.Value
             };
 
             return JsonConvert.SerializeObject(response, new JsonSerializerSettings { Formatting = Formatting.Indented });
         }
 
-        private async Task<ClaimsIdentity> GetIdentityAsync(LoginUserViewModel model, bool reg) {
-            User user= new User();
+        private async Task<ClaimsIdentity> GetIdentityAsync(LoginUserDTO model, bool reg) {
+            var user = new User();
             user.Role = UserRoles.User;
-            if (!reg)
-            {
-                var res = await this.m_userRepository.GetAllAsync(new List<Expression<Func<User, bool>>>{u => u.Login == model.Login});
+            if(!reg) {
+                var res = await this.m_userRepository.GetAllAsync(new List<Expression<Func<User, bool>>> { u => u.Login == model.Login });
                 user = await res.FirstOrDefaultAsync();
-                if (user == null) throw new Exception("Login not found.");
+                if(user == null) throw new Exception("Login not found.");
                 var pass = user.Password;
                 reg = await this.m_userRepository.ExistAsync(u => u.Login == model.Login && BcryptHash.CheckBcryptPassword(model.Password, pass));
             }
 
-            if (reg)
-            {
+            if(reg) {
                 var claims = new List<Claim> {
                     new Claim("Login", model.Login),
                     new Claim("Role", user.Role.ToString())
@@ -106,6 +120,5 @@ namespace BL.Services {
         }
 
         #endregion
-
     }
 }

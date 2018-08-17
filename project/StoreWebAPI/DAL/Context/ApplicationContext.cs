@@ -1,7 +1,7 @@
-﻿using DAL.Entities;
+﻿using ClothingStore.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace DAL.Context {
+namespace ClothingStore.Repository.Context {
     public class ApplicationContext : DbContext {
         public ApplicationContext(DbContextOptions<ApplicationContext> options) :
             base(options) { }

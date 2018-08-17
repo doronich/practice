@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using BL.Interfaces;
-using BL.ViewModels;
-using DAL.Entities;
-using DAL.Interfaces;
+using ClothingStore.Data.Entities;
+using ClothingStore.Repository.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using ClothingStore.Service.Interfaces;
+using ClothingStore.Service.Models;
 
-namespace BL.Services {
+namespace ClothingStore.Service.Services {
     public class OrderService : IOrderService {
         private readonly IRepository<Order> m_orderRepository;
 
@@ -17,7 +17,7 @@ namespace BL.Services {
             this.m_orderRepository = orderRepository;
         }
 
-        public async Task CreateOrderAsync(CreateOrderViewModel model) {
+        public async Task CreateOrderAsync(CreateOrderDTO model) {
             var order = new Order {
                 Active = true,
                 Email = model.Email,

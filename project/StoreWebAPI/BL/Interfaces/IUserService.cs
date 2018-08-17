@@ -1,16 +1,16 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using BL.ViewModels;
+using ClothingStore.Service.Models;
 
-namespace BL.Interfaces {
+namespace ClothingStore.Service.Interfaces {
     public interface IUserService {
-        Task<IList<UserViewModel>> GetUsersAsync();
+        Task<IList<UserDTO>> GetUsersAsync();
 
-        Task<UserViewModel> GetUserAsync(long id);
+        Task<UserDTO> GetUserAsync(long id);
 
-        Task<string> InsertUserAsync(RegisterUserViewModel model);
+        Task<string> InsertUserAsync(RegisterUserDTO model);
 
-        Task UpdateUserAsync(UpdateUserViewModel model);
+        Task UpdateUserAsync(UpdateUserDTO model);
 
         Task DeleteUserAsync(long id);
     }

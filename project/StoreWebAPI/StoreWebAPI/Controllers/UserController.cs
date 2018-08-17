@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using BL.Interfaces;
-using BL.ViewModels;
+using ClothingStore.Service.Interfaces;
+using ClothingStore.Service.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace StoreWebAPI.Controllers {
-    [Route("api")]
-    public class UserController : Controller {
+namespace ClothingStore.Controllers {
+    [Route("api/[controller]")]
+    [ApiController]
+    public class UserController : ControllerBase {
         private readonly ISecurityService m_securityService;
         private readonly IUserService m_userService;
 
@@ -19,19 +20,19 @@ namespace StoreWebAPI.Controllers {
 
         [HttpGet("User")]
         public async Task<IActionResult> GetUser(long id) {
-            UserViewModel user;
+            UserDTO user;
             try {
                 user = await this.m_userService.GetUserAsync(id);
             } catch(Exception exception) {
                 return this.BadRequest(exception.Message);
             }
-            return this.Json(user);
+            return this.Ok(user);
         }
 
         [Authorize]
         [HttpGet("Users")]
         public async Task<IActionResult> GetUsers() {
-            IList<UserViewModel> users;
+            IList<UserDTO> users;
 
             try {
                 users = await this.m_userService.GetUsersAsync();
@@ -39,24 +40,14 @@ namespace StoreWebAPI.Controllers {
                 return this.BadRequest(exception.Message);
             }
 
-            return this.Json(users);
+            return this.Ok(users);
         }
 
-        [AllowAnonymous]
-        [HttpPost("Register")]
-        public async Task<IActionResult> RegisterUser([FromBody] RegisterUserViewModel model) {
-            if(!this.ModelState.IsValid) return this.BadRequest("Incorrect data.");
-            try {
-                var token = await this.m_userService.InsertUserAsync(model);
-                return this.Ok(token);
-            } catch(Exception exception) {
-                return this.BadRequest(exception.Message);
-            }
-        }
+
 
         [Authorize]
         [HttpPut("Update")]
-        public async Task<IActionResult> EditUser([FromBody] UpdateUserViewModel model) {
+        public async Task<IActionResult> EditUser([FromBody] UpdateUserDTO model) {
             if(!this.ModelState.IsValid) return this.BadRequest("Incorrect data.");
             try {
                 await this.m_userService.UpdateUserAsync(model);
@@ -75,25 +66,6 @@ namespace StoreWebAPI.Controllers {
                 return this.BadRequest(exception.Message);
             }
 
-            return this.Ok();
-        }
-        [AllowAnonymous]
-        [HttpPost("Token")]
-        public async Task<IActionResult> Token([FromBody] LoginUserViewModel model) {
-            if(!this.ModelState.IsValid) return this.BadRequest("Incorrect data.");
-
-            try {
-                var token = await this.m_securityService.GetTokenAsync(model);
-                return this.Ok(token);
-            } catch(Exception exception) {
-                return this.BadRequest(exception.Message);
-            }
-        }
-
-        [Authorize]
-        [HttpPost("checkToken")]
-        public IActionResult CheckToken(string user)
-        {
             return this.Ok();
         }
     }

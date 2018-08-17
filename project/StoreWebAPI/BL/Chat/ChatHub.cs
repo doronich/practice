@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
 
-namespace BL.Chat {
+namespace ClothingStore.Service.Chat {
     public class ChatHub : Hub {
         public async Task SendMessage(string username, string message) {
             await this.Clients.All.SendAsync("Send", username, message);

@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using BL.Interfaces;
-using BL.ViewModels;
-using DAL.Entities;
+using ClothingStore.Data.Entities;
+using ClothingStore.Service.Interfaces;
+using ClothingStore.Service.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace StoreWebAPI.Controllers {
+namespace ClothingStore.Controllers {
     [Produces("application/json")]
     [Route("api/item")]
     public class ItemController : Controller {
@@ -24,7 +24,7 @@ namespace StoreWebAPI.Controllers {
         public async Task<IActionResult> All() {
             try {
                 IEnumerable<Item> items = await this.m_itemService.GetAllItemsAsync();
-                return this.Json(items);
+                return this.Ok(items);
             } catch(Exception exception) {
                 return this.BadRequest(exception.Message);
             }
@@ -37,8 +37,8 @@ namespace StoreWebAPI.Controllers {
         public async Task<IActionResult> GetToCart([FromQuery]string[] itemsId) {
             var temp = Array.ConvertAll(itemsId, long.Parse);
             try {
-                IEnumerable<ShopCartViewModel> items = await this.m_itemService.GetToCartAsync(temp);
-                return this.Json(items);
+                IEnumerable<ShopCartDTO> items = await this.m_itemService.GetToCartAsync(temp);
+                return this.Ok(items);
             } catch(Exception exception) {
                 return this.BadRequest(exception.Message);
             }
@@ -48,12 +48,12 @@ namespace StoreWebAPI.Controllers {
         [AllowAnonymous]
         [HttpGet("q")]
         [ResponseCache(Duration = 10)]
-        public async Task<IActionResult> GetBy(ReqItemViewModel item) {
+        public async Task<IActionResult> GetBy([FromQuery]ReqItemDTO item) {
             if(!this.ModelState.IsValid) return this.BadRequest("Incorrect request");
 
             try {
                 var items = await this.m_itemService.GetItemsByKindAsync(item);
-                return this.Json(items);
+                return this.Ok(items);
             } catch(Exception exception) {
                 return this.BadRequest(exception.Message);
             }
@@ -68,7 +68,7 @@ namespace StoreWebAPI.Controllers {
 
             try {
                 var items = await this.m_itemService.GetLastAsync(amount);
-                return this.Json(items);
+                return this.Ok(items);
             } catch(Exception exception) {
                 return this.BadRequest(exception.Message);
             }
@@ -83,7 +83,7 @@ namespace StoreWebAPI.Controllers {
 
             try {
                 var items = await this.m_itemService.GetRandomAsync(amount);
-                return this.Json(items);
+                return this.Ok(items);
             } catch(Exception exception) {
                 return this.BadRequest(exception.Message);
             }
@@ -95,7 +95,7 @@ namespace StoreWebAPI.Controllers {
         public async Task<IActionResult> Get(int id) {
             try {
                 var item = await this.m_itemService.GetItemAsync(id);
-                return this.Json(item);
+                return this.Ok(item);
             } catch(Exception exception) {
                 return this.BadRequest(exception.Message);
             }
@@ -104,7 +104,7 @@ namespace StoreWebAPI.Controllers {
         // POST: api/item
         [HttpPost]
         [Authorize(Policy = "Admin")]
-        public async Task<IActionResult> Post([FromBody] CreateItemViewModel item) {
+        public async Task<IActionResult> Post([FromBody] CreateItemDTO item) {
             if(!this.ModelState.IsValid) return this.BadRequest("Incorrect data.");
 
             try {
@@ -118,7 +118,7 @@ namespace StoreWebAPI.Controllers {
         // PUT: api/item
         [Authorize(Policy = "Admin")]
         [HttpPut]
-        public async Task<IActionResult> Put([FromBody] UpdateItemViewModel item) {
+        public async Task<IActionResult> Put([FromBody] UpdateItemDTO item) {
             if(!this.ModelState.IsValid) return this.BadRequest("Incorrect data.");
 
             try {

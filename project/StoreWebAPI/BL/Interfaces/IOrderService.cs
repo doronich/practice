@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using BL.ViewModels;
-using DAL.Entities;
+using ClothingStore.Service.Models;
+using ClothingStore.Data.Entities;
 
-namespace BL.Interfaces {
+namespace ClothingStore.Service.Interfaces {
     public interface IOrderService {
-        Task CreateOrderAsync(CreateOrderViewModel order);
+        Task CreateOrderAsync(CreateOrderDTO order);
 
         Task<IList<Order>> GetOrdersAsync();
 

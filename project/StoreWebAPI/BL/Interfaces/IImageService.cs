@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
-namespace BL.Interfaces
-{
+namespace ClothingStore.Service.Interfaces {
     public interface IImageService {
         Task<string> GetImagePathAsync(string image);
 
         void DeleteImage(string path);
+
         Task<string> GetBase64StringAsync(string path);
-    } 
+    }
 }

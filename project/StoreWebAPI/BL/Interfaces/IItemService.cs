@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using BL.ViewModels;
-using DAL.Entities;
+using ClothingStore.Service.Models;
+using ClothingStore.Data.Entities;
 
-namespace BL.Interfaces {
+namespace ClothingStore.Service.Interfaces {
     public interface IItemService {
-        Task InsertItemAsync(CreateItemViewModel item);
+        Task InsertItemAsync(CreateItemDTO item);
 
-        Task UpdateItemAsync(UpdateItemViewModel item);
+        Task UpdateItemAsync(UpdateItemDTO item);
 
         Task DeleteItemAsync(long id);
 
@@ -15,12 +15,12 @@ namespace BL.Interfaces {
 
         Task<Item> GetItemAsync(long id);
 
-        Task<object> GetItemsByKindAsync(ReqItemViewModel item);
+        Task<object> GetItemsByKindAsync(ReqItemDTO item);
 
-        Task<IList<PreviewItemViewModel>> GetLastAsync(int amount);
+        Task<IList<PreviewItemDTO>> GetLastAsync(int amount);
 
-        Task<IList<PreviewItemViewModel>> GetRandomAsync(int amount);
+        Task<IList<PreviewItemDTO>> GetRandomAsync(int amount);
 
-        Task<IList<ShopCartViewModel>> GetToCartAsync(long[] itemsId);
+        Task<IList<ShopCartDTO>> GetToCartAsync(long[] itemsId);
     }
 }

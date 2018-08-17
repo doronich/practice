@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using DAL.Context;
-using DAL.Entities;
-using DAL.Interfaces;
+using ClothingStore.Data.Entities;
+using ClothingStore.Repository.Context;
+using ClothingStore.Repository.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace DAL.Repository {
+namespace ClothingStore.Repository.Repository {
     public class Repository<TEntity> : IRepository<TEntity> where TEntity : BaseEntity {
-        private readonly ApplicationContext m_context;
+        public ApplicationContext m_context { get; set; }
 
         private readonly DbSet<TEntity> m_dbSet;
 

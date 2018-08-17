@@ -1,10 +1,13 @@
 ﻿using System.Threading.Tasks;
-using BL.ViewModels;
+using ClothingStore.Service.Models;
+using ClothingStore.Service.Models.User;
 
-namespace BL.Interfaces {
+namespace ClothingStore.Service.Interfaces {
     public interface ISecurityService {
-        Task<string> GetTokenAsync(LoginUserViewModel model, bool reg = false);
+        Task<string> GetTokenAsync(LoginUserDTO model, bool reg = false);
 
         Task<string> EncryptPasswordAsync(string pass);
+
+        Task<string> ChangePasswordAsync(ChangePasswordDTO model);
     }
 }
