@@ -12,7 +12,7 @@ namespace ClothingStore.Controllers {
     [Route("api/item")]
     public class ItemController : Controller {
         private readonly IItemService m_itemService;
-
+        private const string INCORRECT_DATA = "Incorrect data.";
         public ItemController(IItemService itemService) {
             this.m_itemService = itemService;
         }
@@ -49,7 +49,7 @@ namespace ClothingStore.Controllers {
         [HttpGet("q")]
         [ResponseCache(Duration = 10)]
         public async Task<IActionResult> GetBy([FromQuery]ReqItemDTO item) {
-            if(!this.ModelState.IsValid) return this.BadRequest("Incorrect request");
+            if(!this.ModelState.IsValid) return this.BadRequest(INCORRECT_DATA);
 
             try {
                 var items = await this.m_itemService.GetItemsByKindAsync(item);
@@ -64,7 +64,7 @@ namespace ClothingStore.Controllers {
         [HttpGet("last")]
         [ResponseCache(Duration = 10)]
         public async Task<IActionResult> GetLast(int amount = 5) {
-            if(!this.ModelState.IsValid) return this.BadRequest("Incorrect request");
+            if(!this.ModelState.IsValid) return this.BadRequest(INCORRECT_DATA);
 
             try {
                 var items = await this.m_itemService.GetLastAsync(amount);
@@ -79,7 +79,7 @@ namespace ClothingStore.Controllers {
         [HttpGet("random")]
         [ResponseCache(Duration = 10)]
         public async Task<IActionResult> GetRandom(int amount = 6) {
-            if(!this.ModelState.IsValid) return this.BadRequest("Incorrect request");
+            if(!this.ModelState.IsValid) return this.BadRequest(INCORRECT_DATA);
 
             try {
                 var items = await this.m_itemService.GetRandomAsync(amount);
@@ -105,7 +105,7 @@ namespace ClothingStore.Controllers {
         [HttpPost]
         [Authorize(Policy = "Admin")]
         public async Task<IActionResult> Post([FromBody] CreateItemDTO item) {
-            if(!this.ModelState.IsValid) return this.BadRequest("Incorrect data.");
+            if(!this.ModelState.IsValid) return this.BadRequest(INCORRECT_DATA);
 
             try {
                 await this.m_itemService.InsertItemAsync(item);
@@ -119,7 +119,7 @@ namespace ClothingStore.Controllers {
         [Authorize(Policy = "Admin")]
         [HttpPut]
         public async Task<IActionResult> Put([FromBody] UpdateItemDTO item) {
-            if(!this.ModelState.IsValid) return this.BadRequest("Incorrect data.");
+            if(!this.ModelState.IsValid) return this.BadRequest(INCORRECT_DATA);
 
             try {
                 await this.m_itemService.UpdateItemAsync(item);

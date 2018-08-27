@@ -7,7 +7,6 @@ namespace ClothingStore.Service.Models {
         public string LastName { get; set; }
         public string UserName { get; set; }
         public DateTime AddedDate { get; set; }
-
         public UserRoles Role { get; set; }
     }
 }

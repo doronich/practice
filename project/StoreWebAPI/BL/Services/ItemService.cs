@@ -9,6 +9,7 @@ using ClothingStore.Repository.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using ClothingStore.Service.Interfaces;
 using ClothingStore.Service.Models;
+using ClothingStore.Service.Models.Item;
 
 namespace ClothingStore.Service.Services {
     public class ItemService : IItemService {
@@ -47,7 +48,7 @@ namespace ClothingStore.Service.Services {
             var item = new Item {
                 Active = model.Active,
                 CreatedBy = model.CreatedBy,
-                CreatedDate = DateTime.Now,
+                CreatedDate = DateTime.UtcNow,
                 Amount = model.Amount,
                 Brand = model.Brand.ToLower(),
                 Color = model.Color.ToLower(),
@@ -83,7 +84,7 @@ namespace ClothingStore.Service.Services {
 
             item.Active = model.Active;
             item.CreatedBy = "Admin";
-            item.CreatedDate = DateTime.Now;
+            item.CreatedDate = DateTime.UtcNow;
             item.Amount = model.Amount;
             item.Brand = model.Brand.ToLower();
             item.Color = model.Color.ToLower();
@@ -103,7 +104,7 @@ namespace ClothingStore.Service.Services {
             item.Status = model.Status;
             item.Subkind = model.Subkind.ToLower();
             item.UpdatedBy = model.Username;
-            item.UpdatedDate = DateTime.Now;
+            item.UpdatedDate = DateTime.UtcNow;
 
             await this.m_itemRepository.UpdateAsync(item);
             if(item.Id <= 0) throw new Exception("Updating error.");
@@ -212,10 +213,17 @@ namespace ClothingStore.Service.Services {
 
             var result = await PaginationList<Item>.CreateAsync(query.AsNoTracking(), item.PageIndex ?? 1, item.PageSize ?? 12);
 
-            if(result == null) throw new Exception("Some troubles with items!");
-            foreach(var i in result) i.PreviewImagePath = await this.m_imageService.GetBase64StringAsync(i.PreviewImagePath);
+            if(result == null) throw new Exception("Items not found.");
 
-            return new { res = result, hasPrev = result.HasPreviousPage, hasNext = result.HasNextPage, total = result.TotalPages, index = result.PageIndex };
+            var items = result.Select(i => new FilteredItemDTO
+            {
+                Id = i.Id,
+                Name = i.Name,
+                Price = i.Price,
+                Active = i.Active,
+                PreviewImagePath = Task.Run(async () => await this.m_imageService.GetBase64StringAsync(i.PreviewImagePath)).Result
+            });
+            return new { res = items, hasPrev = result.HasPreviousPage, hasNext = result.HasNextPage, total = result.TotalPages, index = result.PageIndex };
         }
 
         public async Task<IList<PreviewItemDTO>> GetLastAsync(int amount) {

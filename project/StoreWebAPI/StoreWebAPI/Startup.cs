@@ -57,19 +57,19 @@ namespace ClothingStore {
                     .AddJwtBearer(options => {
                         options.RequireHttpsMetadata = false;
                         options.TokenValidationParameters = new TokenValidationParameters {
-                            // укзывает, будет ли валидироваться издатель при валидации токена
+
                             ValidateIssuer = true,
-                            // строка, представляющая издателя
+
                             ValidIssuer = this.Configuration["AuthOptions:ISSUER"],
-                            // будет ли валидироваться потребитель токена
+
                             ValidateAudience = true,
-                            // установка потребителя токена
+
                             ValidAudience = this.Configuration["AuthOptions:AUDIENCE"],
-                            // будет ли валидироваться время существования
+
                             ValidateLifetime = true,
-                            // установка ключа безопасности
+
                             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(this.Configuration["AuthOptions:KEY"])),
-                            // валидация ключа безопасности
+
                             ValidateIssuerSigningKey = true,
                             ClockSkew = TimeSpan.Zero
                         };

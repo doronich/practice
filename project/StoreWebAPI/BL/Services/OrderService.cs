@@ -7,7 +7,7 @@ using ClothingStore.Data.Entities;
 using ClothingStore.Repository.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using ClothingStore.Service.Interfaces;
-using ClothingStore.Service.Models;
+using ClothingStore.Service.Models.Order;
 
 namespace ClothingStore.Service.Services {
     public class OrderService : IOrderService {
@@ -24,7 +24,7 @@ namespace ClothingStore.Service.Services {
                 Address = model.Address,
                 Comment = model.Comment,
                 CreatedBy = "User: " + model.Name,
-                CreatedDate = DateTime.Now,
+                CreatedDate = DateTime.UtcNow,
                 Name = model.Name,
                 PhoneNumber = model.PhoneNumber,
                 OrderItems = model.Items,
@@ -49,6 +49,18 @@ namespace ClothingStore.Service.Services {
             var result = list[0].OrderItems.ToList();
 
             return result;
+        }
+
+        public async Task UpdateOrderStatusAsync(UpdateOrderStatusDTO model, string username) {
+            var order = await this.m_orderRepository.GetByIdAsync(model.Id);
+
+            if(order==null) throw new Exception("Order not found.");
+
+            order.Id = model.Id;
+            order.UpdatedDate = DateTime.UtcNow;
+            order.UpdatedBy = username;
+
+            await this.m_orderRepository.UpdateAsync(order);
         }
     }
 }

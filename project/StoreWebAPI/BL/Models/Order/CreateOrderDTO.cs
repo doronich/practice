@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using ClothingStore.Data.Entities;
 
-namespace ClothingStore.Service.Models {
+namespace ClothingStore.Service.Models.Order {
     public class CreateOrderDTO {
         public string Name { get; set; }
         public string PhoneNumber { get; set; }

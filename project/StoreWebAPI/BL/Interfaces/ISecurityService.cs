@@ -8,6 +8,6 @@ namespace ClothingStore.Service.Interfaces {
 
         Task<string> EncryptPasswordAsync(string pass);
 
-        Task<string> ChangePasswordAsync(ChangePasswordDTO model);
+        Task ChangePasswordAsync(ChangePasswordDTO model);
     }
 }

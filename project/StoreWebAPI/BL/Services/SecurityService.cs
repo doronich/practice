@@ -39,7 +39,7 @@ namespace ClothingStore.Service.Services {
             return await Task.Run(() => BcryptHash.GenerateBcryptHash(pass));
         }
 
-        public async Task<string> ChangePasswordAsync(ChangePasswordDTO model) {
+        public async Task ChangePasswordAsync(ChangePasswordDTO model) {
             if(this.ValidatePassword(model.CurrentPassword) && this.ValidatePassword(model.NewPassword)) {
                 var user = await this.m_userRepository.GetByIdAsync(model.Id);
 
@@ -48,7 +48,6 @@ namespace ClothingStore.Service.Services {
                 if (BcryptHash.CheckBcryptPassword(model.CurrentPassword,user.Password)) {
                     user.Password = await this.EncryptPasswordAsync(model.NewPassword);
                     await this.m_userRepository.UpdateAsync(user);
-                    return "ok";
                 } else {
                     throw new Exception("Incorrect password.");
                 }
@@ -70,9 +69,9 @@ namespace ClothingStore.Service.Services {
 
         private async Task<string> TokenAsync(LoginUserDTO model, bool reg) {
             var identity = await this.GetIdentityAsync(model, reg);
-            //if (identity == null) throw new Exception("Invalid login or password.");
+            if (identity == null) throw new Exception("Invalid login or password.");
 
-            var now = DateTime.Now;
+            var now = DateTime.UtcNow;
             var jwt = new JwtSecurityToken(
                 this.Settings.Issuer,
                 this.Settings.Audience,
@@ -102,6 +101,7 @@ namespace ClothingStore.Service.Services {
                 if(user == null) throw new Exception("Login not found.");
                 var pass = user.Password;
                 reg = await this.m_userRepository.ExistAsync(u => u.Login == model.Login && BcryptHash.CheckBcryptPassword(model.Password, pass));
+                if(!reg) throw new Exception("Incorrect password.");
             }
 
             if(reg) {

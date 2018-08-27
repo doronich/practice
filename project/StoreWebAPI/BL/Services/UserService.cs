@@ -6,6 +6,7 @@ using ClothingStore.Data.Entities;
 using ClothingStore.Repository.Interfaces;
 using ClothingStore.Service.Interfaces;
 using ClothingStore.Service.Models;
+using ClothingStore.Service.Models.User;
 using Microsoft.EntityFrameworkCore;
 
 namespace ClothingStore.Service.Services {
@@ -36,10 +37,24 @@ namespace ClothingStore.Service.Services {
             };
         }
 
+        public async Task<ProfileDTO> GetUserAsync(string username)
+        {
+            var users = await this.m_userRepository.GetAllAsync();
+            var user = await users.Where(i => i.Login == username).FirstAsync();
+            if (user == null) throw new Exception("User not found.");
+            return new ProfileDTO()
+            {
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Email = user.Email,
+                Id = user.Id
+            };
+        }
+
         public async Task<IList<UserDTO>> GetUsersAsync() {
             var query = await this.m_userRepository.GetAllAsync();
             var users = await query.AnyAsync();
-            if(!users) throw new Exception("No users found.");
+            if(!users) throw new Exception("Users not found.");
 
             return query.Select(item => new UserDTO {
                 FirstName = item.FirstName,
@@ -56,7 +71,7 @@ namespace ClothingStore.Service.Services {
                 Email = model.Email,
                 Password = await this.m_security.EncryptPasswordAsync(model.Password),
                 Role = UserRoles.User,
-                CreatedBy = model.CreatedBy ?? "Admin1",
+                CreatedBy = model.CreatedBy ?? "Admin",
                 CreatedDate = DateTime.UtcNow,
                 FirstName = model.Firstname,
                 LastName = model.Lastname,

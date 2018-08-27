@@ -9,7 +9,6 @@ namespace ClothingStore.Service.Chat {
 
         public async Task SendTyping(string username) {
             await this.Clients.Others.SendAsync("StartTyping", username);
-
         }
 
         public async Task DeleteTyping(string username) {

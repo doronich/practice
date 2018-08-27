@@ -78,3 +78,5 @@ project/StoreWebAPI/Tests/obj/Tests.csproj.nuget.g.props
 project/StoreWebAPI/Tests/bin/Debug/netcoreapp2.1/Tests.deps.json
 project/StoreWebAPI/Tests/UnitTest1.cs
 project/StoreWebAPI/Tests/Tests.csproj
+project/StoreWebAPI/ClothingStore.Data/obj/Debug/netcoreapp2.1/ClothingStore.Data.csproj.CopyComplete
+project/StoreWebAPI/ClothingStore.Data/bin/Debug/netcoreapp2.1/Microsoft.EntityFrameworkCore.Relational.xml

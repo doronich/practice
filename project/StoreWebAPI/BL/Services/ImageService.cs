@@ -10,7 +10,7 @@ namespace ClothingStore.Service.Services {
             
             var base64Str = image.Substring(image.IndexOf(',') + 1);
             var bytes = Convert.FromBase64String(base64Str);
-            var name = "../ImageStore/" + DateTime.Now.ToString("yyyyMMddhhmmss") +"R" + new Random().Next(1000)+ "." + type;
+            var name = "../ImageStore/" + DateTime.UtcNow.ToString("yyyyMMddhhmmss") +"R" + new Random().Next(1000)+ "." + type;
 
             await File.WriteAllBytesAsync(name, bytes);
 

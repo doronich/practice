@@ -10,37 +10,34 @@ namespace ClothingStore.Controllers {
     [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase {
-        private readonly ISecurityService m_securityService;
         private readonly IUserService m_userService;
+        private const string INCORRECT_DATA = "Incorrect data.";
 
-        public UserController(IUserService userService, ISecurityService securityService) {
+        public UserController(IUserService userService) {
             this.m_userService = userService;
-            this.m_securityService = securityService;
         }
 
+        [Authorize]
         [HttpGet("User")]
-        public async Task<IActionResult> GetUser(long id) {
-            UserDTO user;
+        public async Task<IActionResult> GetUser([FromQuery] string username) {
             try {
-                user = await this.m_userService.GetUserAsync(id);
+                var user = await this.m_userService.GetUserAsync(username);
+                return this.Ok(user);
             } catch(Exception exception) {
                 return this.BadRequest(exception.Message);
             }
-            return this.Ok(user);
+
         }
 
         [Authorize]
         [HttpGet("Users")]
         public async Task<IActionResult> GetUsers() {
-            IList<UserDTO> users;
-
             try {
-                users = await this.m_userService.GetUsersAsync();
+                var users = await this.m_userService.GetUsersAsync();
+                return this.Ok(users);
             } catch(Exception exception) {
                 return this.BadRequest(exception.Message);
             }
-
-            return this.Ok(users);
         }
 
 
@@ -48,7 +45,7 @@ namespace ClothingStore.Controllers {
         [Authorize]
         [HttpPut("Update")]
         public async Task<IActionResult> EditUser([FromBody] UpdateUserDTO model) {
-            if(!this.ModelState.IsValid) return this.BadRequest("Incorrect data.");
+            if(!this.ModelState.IsValid) return this.BadRequest(INCORRECT_DATA);
             try {
                 await this.m_userService.UpdateUserAsync(model);
             } catch(Exception exception) {
@@ -62,11 +59,10 @@ namespace ClothingStore.Controllers {
         public async Task<IActionResult> DeleteUser([FromBody] long id) {
             try {
                 await this.m_userService.DeleteUserAsync(id);
+                return this.Ok();
             } catch(Exception exception) {
                 return this.BadRequest(exception.Message);
-            }
-
-            return this.Ok();
+            }          
         }
     }
 }
