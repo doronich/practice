@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using ClothingStore.Service.Models;
 using ClothingStore.Data.Entities;
+using ClothingStore.Data.Entities.item;
+using ClothingStore.Service.Models.Cart;
+using ClothingStore.Service.Models.Item;
 
 namespace ClothingStore.Service.Interfaces {
     public interface IItemService {
@@ -17,10 +19,17 @@ namespace ClothingStore.Service.Interfaces {
 
         Task<object> GetItemsByKindAsync(ReqItemDTO item);
 
-        Task<IList<PreviewItemDTO>> GetLastAsync(int amount);
+        Task<IList<GetPreviewItemDTO>> GetLastAsync(int amount);
 
-        Task<IList<PreviewItemDTO>> GetRandomAsync(int amount);
+        Task<IList<GetPreviewItemDTO>> GetRandomAsync(int amount);
 
-        Task<IList<ShopCartDTO>> GetToCartAsync(long[] itemsId);
+        Task<IList<GetItemForCartDTO>> GetToCartAsync(long[] itemsId);
+
+        Task<GetItemForCartDTO> GetItemForCartAsync(long id);
+
+        Task<Item> GetItemById(long id);
+
+        Task<IList<string>> GetCategoriesAsync();
+        Task<IList<string>> GetSubCategoriesAsync();
     }
 }

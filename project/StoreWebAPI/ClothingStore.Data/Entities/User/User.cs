@@ -21,5 +21,7 @@ namespace ClothingStore.Data.Entities {
 
         [Required]
         public UserRoles Role { get; set; }
+
+        public string PhoneNumber { get; set; }
     }
 }

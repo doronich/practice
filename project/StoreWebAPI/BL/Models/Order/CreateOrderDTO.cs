@@ -1,18 +1,29 @@
 ﻿using System.Collections.Generic;
-using ClothingStore.Data.Entities;
+using System.ComponentModel.DataAnnotations;
+using ClothingStore.Data.Entities.Order;
 
 namespace ClothingStore.Service.Models.Order {
     public class CreateOrderDTO {
-        public string Name { get; set; }
-        public string PhoneNumber { get; set; }
-        public string Email { get; set; }
-        public string Comment { get; set; }
+        public string UserName { get; set; }
 
+        [Required]
+        public string Name { get; set; }
+
+        [Phone]
+        public string PhoneNumber { get; set; }
+
+        [EmailAddress]
+        public string Email { get; set; }
+
+        public string Comment { get; set; }
         public string Address { get; set; }
 
-        //в очереди - 0, выполнение - 1, оплачен - 2, выполнен - 3, отменен - 4
+        public string Code { get; set; }
+
         public OrderStatus Status { get; set; }
         public decimal TotalPrice { get; set; }
-        public List<OrderItem> Items { get; set; }
+
+        [Required]
+        public List<CreateOrderItemDTO> Items { get; set; }
     }
 }

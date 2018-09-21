@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
+using ClothingStore.Filters;
 using ClothingStore.Service.Interfaces;
 using ClothingStore.Service.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -11,7 +11,6 @@ namespace ClothingStore.Controllers {
     [ApiController]
     public class UserController : ControllerBase {
         private readonly IUserService m_userService;
-        private const string INCORRECT_DATA = "Incorrect data.";
 
         public UserController(IUserService userService) {
             this.m_userService = userService;
@@ -21,7 +20,7 @@ namespace ClothingStore.Controllers {
         [HttpGet("User")]
         public async Task<IActionResult> GetUser([FromQuery] string username) {
             try {
-                var user = await this.m_userService.GetUserAsync(username);
+                var user = await this.m_userService.GetProfileByUsernameAsync(username);
                 return this.Ok(user);
             } catch(Exception exception) {
                 return this.BadRequest(exception.Message);
@@ -44,16 +43,16 @@ namespace ClothingStore.Controllers {
 
         [Authorize]
         [HttpPut("Update")]
+        [ValidateModel]
         public async Task<IActionResult> EditUser([FromBody] UpdateUserDTO model) {
-            if(!this.ModelState.IsValid) return this.BadRequest(INCORRECT_DATA);
             try {
                 await this.m_userService.UpdateUserAsync(model);
+                return this.Ok();
             } catch(Exception exception) {
                 return this.BadRequest(exception.Message);
             }
-
-            return this.Ok();
         }
+
         [Authorize]
         [HttpDelete("Delete")]
         public async Task<IActionResult> DeleteUser([FromBody] long id) {

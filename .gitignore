@@ -80,3 +80,5 @@ project/StoreWebAPI/Tests/UnitTest1.cs
 project/StoreWebAPI/Tests/Tests.csproj
 project/StoreWebAPI/ClothingStore.Data/obj/Debug/netcoreapp2.1/ClothingStore.Data.csproj.CopyComplete
 project/StoreWebAPI/ClothingStore.Data/bin/Debug/netcoreapp2.1/Microsoft.EntityFrameworkCore.Relational.xml
+project/StoreWebAPI/BL/bin/Debug/netcoreapp2.1/Microsoft.AspNetCore.Http.Abstractions.xml
+project/StoreWebAPI/BL/bin/Debug/netcoreapp2.1/ClothingStore.Service.deps.json

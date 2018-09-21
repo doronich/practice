@@ -15,11 +15,97 @@ namespace Repository.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.1.1-rtm-30846")
+                .HasAnnotation("ProductVersion", "2.1.3-rtm-32065")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("ClothingStore.Data.Entities.Item", b =>
+            modelBuilder.Entity("ClothingStore.Data.Entities.Categories.Category", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<bool>("Active");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired();
+
+                    b.Property<DateTime>("CreatedDate");
+
+                    b.Property<string>("Name");
+
+                    b.Property<string>("RusName");
+
+                    b.Property<string>("UpdatedBy");
+
+                    b.Property<DateTime?>("UpdatedDate");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Categories");
+                });
+
+            modelBuilder.Entity("ClothingStore.Data.Entities.Categories.SubCategory", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<bool>("Active");
+
+                    b.Property<long>("CategoryId");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired();
+
+                    b.Property<DateTime>("CreatedDate");
+
+                    b.Property<string>("Name");
+
+                    b.Property<string>("RusName");
+
+                    b.Property<string>("UpdatedBy");
+
+                    b.Property<DateTime?>("UpdatedDate");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
+
+                    b.ToTable("SubCategories");
+                });
+
+            modelBuilder.Entity("ClothingStore.Data.Entities.item.FavoriteItem", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<bool>("Active");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired();
+
+                    b.Property<DateTime>("CreatedDate");
+
+                    b.Property<long>("ItemId");
+
+                    b.Property<string>("UpdatedBy");
+
+                    b.Property<DateTime?>("UpdatedDate");
+
+                    b.Property<long>("UserId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ItemId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("FavoriteItems");
+                });
+
+            modelBuilder.Entity("ClothingStore.Data.Entities.item.Item", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -31,6 +117,8 @@ namespace Repository.Migrations
 
                     b.Property<string>("Brand");
 
+                    b.Property<long?>("CategoryId");
+
                     b.Property<string>("Color");
 
                     b.Property<string>("CreatedBy")
@@ -40,7 +128,7 @@ namespace Repository.Migrations
 
                     b.Property<string>("Description");
 
-                    b.Property<int>("Discount");
+                    b.Property<double>("Discount");
 
                     b.Property<string>("ImagePath1");
 
@@ -49,6 +137,8 @@ namespace Repository.Migrations
                     b.Property<string>("ImagePath3");
 
                     b.Property<int>("Kind");
+
+                    b.Property<string>("MinPreviewImagePath");
 
                     b.Property<string>("Name");
 
@@ -62,6 +152,8 @@ namespace Repository.Migrations
 
                     b.Property<int>("Status");
 
+                    b.Property<long?>("SubCategoryId");
+
                     b.Property<string>("Subkind");
 
                     b.Property<string>("UpdatedBy");
@@ -70,10 +162,50 @@ namespace Repository.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CategoryId");
+
+                    b.HasIndex("SubCategoryId");
+
                     b.ToTable("Items");
                 });
 
-            modelBuilder.Entity("ClothingStore.Data.Entities.Order", b =>
+            modelBuilder.Entity("ClothingStore.Data.Entities.Order.CouponCode", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<bool>("Active");
+
+                    b.Property<string>("Code");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired();
+
+                    b.Property<DateTime>("CreatedDate");
+
+                    b.Property<int>("Discount");
+
+                    b.Property<DateTime>("ExpiryDate");
+
+                    b.Property<string>("UpdatedBy");
+
+                    b.Property<DateTime?>("UpdatedDate");
+
+                    b.Property<long?>("UserId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Code")
+                        .IsUnique()
+                        .HasFilter("[Code] IS NOT NULL");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("CouponCodes");
+                });
+
+            modelBuilder.Entity("ClothingStore.Data.Entities.Order.Order", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -82,6 +214,8 @@ namespace Repository.Migrations
                     b.Property<bool>("Active");
 
                     b.Property<string>("Address");
+
+                    b.Property<long?>("CodeId");
 
                     b.Property<string>("Comment");
 
@@ -104,18 +238,31 @@ namespace Repository.Migrations
 
                     b.Property<DateTime?>("UpdatedDate");
 
+                    b.Property<long?>("UserId");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("CodeId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Orders");
                 });
 
-            modelBuilder.Entity("ClothingStore.Data.Entities.OrderItem", b =>
+            modelBuilder.Entity("ClothingStore.Data.Entities.Order.OrderItem", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<bool>("Active");
+
                     b.Property<int>("Amount");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired();
+
+                    b.Property<DateTime>("CreatedDate");
 
                     b.Property<long>("ItemId");
 
@@ -124,6 +271,10 @@ namespace Repository.Migrations
                     b.Property<long>("OrderId");
 
                     b.Property<decimal>("Price");
+
+                    b.Property<string>("UpdatedBy");
+
+                    b.Property<DateTime?>("UpdatedDate");
 
                     b.HasKey("Id");
 
@@ -162,6 +313,8 @@ namespace Repository.Migrations
                     b.Property<string>("Password")
                         .IsRequired();
 
+                    b.Property<string>("PhoneNumber");
+
                     b.Property<int>("Role");
 
                     b.Property<string>("UpdatedBy");
@@ -170,12 +323,68 @@ namespace Repository.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Email")
+                        .IsUnique();
+
+                    b.HasIndex("Login")
+                        .IsUnique();
+
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("ClothingStore.Data.Entities.OrderItem", b =>
+            modelBuilder.Entity("ClothingStore.Data.Entities.Categories.SubCategory", b =>
                 {
-                    b.HasOne("ClothingStore.Data.Entities.Order")
+                    b.HasOne("ClothingStore.Data.Entities.Categories.Category", "Category")
+                        .WithMany("SubCategories")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("ClothingStore.Data.Entities.item.FavoriteItem", b =>
+                {
+                    b.HasOne("ClothingStore.Data.Entities.item.Item", "Item")
+                        .WithMany("FavoriteItems")
+                        .HasForeignKey("ItemId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("ClothingStore.Data.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("ClothingStore.Data.Entities.item.Item", b =>
+                {
+                    b.HasOne("ClothingStore.Data.Entities.Categories.Category")
+                        .WithMany("Items")
+                        .HasForeignKey("CategoryId");
+
+                    b.HasOne("ClothingStore.Data.Entities.Categories.SubCategory")
+                        .WithMany("Items")
+                        .HasForeignKey("SubCategoryId");
+                });
+
+            modelBuilder.Entity("ClothingStore.Data.Entities.Order.CouponCode", b =>
+                {
+                    b.HasOne("ClothingStore.Data.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+                });
+
+            modelBuilder.Entity("ClothingStore.Data.Entities.Order.Order", b =>
+                {
+                    b.HasOne("ClothingStore.Data.Entities.Order.CouponCode", "Code")
+                        .WithMany()
+                        .HasForeignKey("CodeId");
+
+                    b.HasOne("ClothingStore.Data.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+                });
+
+            modelBuilder.Entity("ClothingStore.Data.Entities.Order.OrderItem", b =>
+                {
+                    b.HasOne("ClothingStore.Data.Entities.Order.Order", "Order")
                         .WithMany("OrderItems")
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade);

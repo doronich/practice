@@ -7,5 +7,9 @@ namespace ClothingStore.Service.Interfaces {
         void DeleteImage(string path);
 
         Task<string> GetBase64StringAsync(string path);
+
+        string GetBase64String(string path);
+
+        Task<string> GetMinImagePathAsync(string path);
     }
 }

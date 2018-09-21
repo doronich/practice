@@ -1,8 +1,9 @@
-﻿using ClothingStore.Data.Entities;
+﻿using System.ComponentModel.DataAnnotations;
+using ClothingStore.Data.Entities;
 
-namespace ClothingStore.Service.Models {
+namespace ClothingStore.Service.Models.Item {
     public class UpdateItemDTO {
-        public string Username { get; set; }
+        [Required]
         public int Id { get; set; }
         public bool Active { get; set; }
         public string Name { get; set; }

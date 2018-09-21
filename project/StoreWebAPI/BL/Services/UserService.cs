@@ -7,28 +7,64 @@ using ClothingStore.Repository.Interfaces;
 using ClothingStore.Service.Interfaces;
 using ClothingStore.Service.Models;
 using ClothingStore.Service.Models.User;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
 namespace ClothingStore.Service.Services {
-    public class UserService : IUserService {
+    public class UserService : BaseService<User>, IUserService {
         private readonly ISecurityService m_security;
-        private readonly IRepository<User> m_userRepository;
 
-        public UserService(IRepository<User> userRepository, ISecurityService securityService) {
-            this.m_userRepository = userRepository;
+        public UserService(IRepository<User> repository, ISecurityService securityService, IHttpContextAccessor accessor) : base(accessor, repository) {
             this.m_security = securityService;
         }
 
-        public async Task DeleteUserAsync(long id) {
-            var user = await this.m_userRepository.GetByIdAsync(id);
-            if(user == null) throw new Exception("User not found.");
-            await this.m_userRepository.DeleteAsync(user);
+        public async Task<string> InsertUserAsync(RegisterUserDTO model) {
+            var ex = await this.Repository.ExistAsync(u => u.Login == model.Login) || await this.Repository.ExistAsync(e => e.Email == model.Email);
+
+            if(ex) throw new Exception("Login or email already exists.");
+
+            var user = new User {
+                Login = model.Login,
+                Email = model.Email,
+                Password = await this.m_security.EncryptPasswordAsync(model.Password),
+                Role = UserRoles.User,
+                CreatedBy = model.Login,
+                FirstName = model.Firstname,
+                LastName = model.Lastname,
+                Active = true
+            };
+
+            await this.Repository.CreateAsync(user);
+            if(user.Id <= 0) throw new Exception("Registration error.");
+
+            return await this.m_security.GetTokenAsync(new LoginUserDTO { Login = user.Login, Password = model.Password }, true);
         }
 
-        public async Task<UserDTO> GetUserAsync(long id) {
-            var user = await this.m_userRepository.GetByIdAsync(id);
+        public async Task UpdateUserAsync(UpdateUserDTO model) {
+            var user = await this.Repository.GetByIdAsync(model.Id);
+
             if(user == null) throw new Exception("User not found.");
-            return new UserDTO {
+
+            user.FirstName = model.Firstname ?? user.FirstName;
+            user.LastName = model.Lastname ?? user.LastName;
+            user.UpdatedBy = this.HttpContext.User.Claims.FirstOrDefault()?.Value;
+            user.PhoneNumber = model.PhoneNumber;
+
+            await this.Repository.UpdateAsync(user);
+
+            if(user.Id <= 0) throw new Exception("Update error.");
+        }
+
+        public async Task DeleteUserAsync(long id) {
+            await this.RemoveAsync(id);
+        }
+
+        #region GET methods
+
+        public async Task<GetUserDTO> GetUserInfoByIdAsync(long id) {
+            var user = await this.Repository.GetByIdAsync(id);
+            if(user == null) throw new Exception("User not found.");
+            return new GetUserDTO {
                 UserName = user.Login,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
@@ -37,26 +73,37 @@ namespace ClothingStore.Service.Services {
             };
         }
 
-        public async Task<ProfileDTO> GetUserAsync(string username)
-        {
-            var users = await this.m_userRepository.GetAllAsync();
+        public async Task<User> GetUserByIdAsync(long id) {
+            var user = await this.GetByIdAsync(id);
+            return user;
+        }
+
+        public async Task<User> GetUserByUsernameAsync(string username) {
+            var users = await this.Repository.GetAllAsync();
             var user = await users.Where(i => i.Login == username).FirstAsync();
-            if (user == null) throw new Exception("User not found.");
-            return new ProfileDTO()
-            {
+            if(user == null) throw new Exception("User not found.");
+            return user;
+        }
+
+        public async Task<GetProfileDTO> GetProfileByUsernameAsync(string username) {
+            var users = await this.Repository.GetAllAsync();
+            var user = await users.Where(i => i.Login == username).FirstAsync();
+            if(user == null) throw new Exception("User not found.");
+            return new GetProfileDTO {
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 Email = user.Email,
-                Id = user.Id
+                Id = user.Id,
+                PhoneNumber = user.PhoneNumber
             };
         }
 
-        public async Task<IList<UserDTO>> GetUsersAsync() {
-            var query = await this.m_userRepository.GetAllAsync();
+        public async Task<IList<GetUserDTO>> GetUsersAsync() {
+            var query = await this.Repository.GetAllAsync();
             var users = await query.AnyAsync();
             if(!users) throw new Exception("Users not found.");
 
-            return query.Select(item => new UserDTO {
+            return query.Select(item => new GetUserDTO {
                 FirstName = item.FirstName,
                 LastName = item.LastName,
                 UserName = item.Login,
@@ -65,39 +112,6 @@ namespace ClothingStore.Service.Services {
             }).ToList();
         }
 
-        public async Task<string> InsertUserAsync(RegisterUserDTO model) {
-            var user = new User {
-                Login = model.Login,
-                Email = model.Email,
-                Password = await this.m_security.EncryptPasswordAsync(model.Password),
-                Role = UserRoles.User,
-                CreatedBy = model.CreatedBy ?? "Admin",
-                CreatedDate = DateTime.UtcNow,
-                FirstName = model.Firstname,
-                LastName = model.Lastname,
-                Active = true
-            };
-            var ex = !await this.m_userRepository.ExistAsync(u => u.Login == user.Login) && !await this.m_userRepository.ExistAsync(e => e.Email == user.Email);
-            if(ex) await this.m_userRepository.CreateAsync(user);
-            else throw new Exception("Login or email already exists.");
-            if(user.Id <= 0) throw new Exception("Registration error.");
-
-            return await this.m_security.GetTokenAsync(new LoginUserDTO { Login = user.Login, Password = model.Password }, true);
-        }
-
-        public async Task UpdateUserAsync(UpdateUserDTO model) {
-            var user = await this.m_userRepository.GetByIdAsync(model.Id);
-            if(user == null) throw new Exception("User not found.");
-            user.Email = model.Email ?? user.Email;
-            user.Password = model.Password == null ? user.Password : await this.m_security.EncryptPasswordAsync(model.Password);
-            user.FirstName = model.Firstname ?? user.FirstName;
-            user.LastName = model.Lastname ?? user.LastName;
-            user.UpdatedBy = model.UpdatedBy ?? user.UpdatedBy;
-            user.UpdatedDate = DateTime.UtcNow;
-
-            await this.m_userRepository.UpdateAsync(user);
-
-            if(user.Id <= 0) throw new Exception("Update error.");
-        }
+        #endregion
     }
 }

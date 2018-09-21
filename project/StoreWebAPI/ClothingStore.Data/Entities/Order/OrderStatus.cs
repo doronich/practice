@@ -1,8 +1,9 @@
-﻿namespace ClothingStore.Data.Entities {
+﻿namespace ClothingStore.Data.Entities.Order {
     public enum OrderStatus {
         Queue,
         Execution,
         Paid,
-        Canceled
+        Canceled,
+        Complited
     }
 }

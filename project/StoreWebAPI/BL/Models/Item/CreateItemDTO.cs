@@ -1,6 +1,6 @@
 ﻿using ClothingStore.Data.Entities;
 
-namespace ClothingStore.Service.Models {
+namespace ClothingStore.Service.Models.Item {
     public class CreateItemDTO {
         public int Id { get; set; }
         public bool Active { get; set; }
@@ -16,7 +16,6 @@ namespace ClothingStore.Service.Models {
         public string Size { get; set; }
         public int Amount { get; set; }
         public Gender Sex { get; set; }
-        public string CreatedBy { get; set; }
         public string PreviewImagePath { get; set; }
         public string ImagePath1 { get; set; }
         public string ImagePath2 { get; set; }

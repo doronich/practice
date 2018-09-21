@@ -20,6 +20,6 @@ namespace ClothingStore.Repository.Interfaces {
 
         Task<bool> ExistAsync(Expression<Func<TEntity, bool>> predicate);
 
-        ApplicationContext m_context { get; set; }
+        ApplicationContext Context { get; set; }
     }
 }

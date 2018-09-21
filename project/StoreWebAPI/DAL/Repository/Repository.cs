@@ -10,19 +10,19 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ClothingStore.Repository.Repository {
     public class Repository<TEntity> : IRepository<TEntity> where TEntity : BaseEntity {
-        public ApplicationContext m_context { get; set; }
+        public ApplicationContext Context { get; set; }
 
         private readonly DbSet<TEntity> m_dbSet;
 
         public Repository(ApplicationContext context) {
-            this.m_context = context;
+            this.Context = context;
             this.m_dbSet = context.Set<TEntity>();
         }
 
         public async Task CreateAsync(TEntity item) {
             if(item == null) throw new ArgumentNullException(nameof(item));
             await this.m_dbSet.AddAsync(item);
-            await this.m_context.SaveChangesAsync();
+            await this.Context.SaveChangesAsync();
         }
 
         public async Task<IQueryable<TEntity>> GetAllAsync(IEnumerable<Expression<Func<TEntity, bool>>> predicate = null, string[] includes = null) {
@@ -40,7 +40,6 @@ namespace ClothingStore.Repository.Repository {
             return await this.m_dbSet.FindAsync(id);
         }
 
-        // ======================
         public async Task<bool> ExistAsync(Expression<Func<TEntity, bool>> predicate = null) {
             return predicate == null ? await this.m_dbSet.AnyAsync() : await this.m_dbSet.AnyAsync(predicate);
         }
@@ -48,15 +47,15 @@ namespace ClothingStore.Repository.Repository {
         public async Task UpdateAsync(TEntity item) {
             if(item == null) throw new ArgumentNullException(nameof(item));
 
-            this.m_context.Entry(item).State = EntityState.Modified;
-            await this.m_context.SaveChangesAsync();
+            this.Context.Entry(item).State = EntityState.Modified;
+            await this.Context.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(TEntity item) {
             if(item == null) throw new ArgumentNullException(nameof(item));
 
-            this.m_context.Remove(item);
-            await this.m_context.SaveChangesAsync();
+            this.Context.Remove(item);
+            await this.Context.SaveChangesAsync();
         }
     }
 }

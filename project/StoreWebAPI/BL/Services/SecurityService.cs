@@ -6,17 +6,17 @@ using System.Linq.Expressions;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using ClothingStore.Service.Settings;
 using ClothingStore.Data.Entities;
 using ClothingStore.Repository.Interfaces;
+using ClothingStore.Service.Helpers;
+using ClothingStore.Service.Interfaces;
+using ClothingStore.Service.Models;
+using ClothingStore.Service.Models.User;
+using ClothingStore.Service.Settings;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
-using ClothingStore.Service.Additional;
-using ClothingStore.Service.Interfaces;
-using ClothingStore.Service.Models;
-using ClothingStore.Service.Models.User;
 
 namespace ClothingStore.Service.Services {
     public class SecurityService : ISecurityService {
@@ -40,36 +40,32 @@ namespace ClothingStore.Service.Services {
         }
 
         public async Task ChangePasswordAsync(ChangePasswordDTO model) {
-            if(this.ValidatePassword(model.CurrentPassword) && this.ValidatePassword(model.NewPassword)) {
-                var user = await this.m_userRepository.GetByIdAsync(model.Id);
-
-                if(user==null) throw new Exception("User not found.");
-
-                if (BcryptHash.CheckBcryptPassword(model.CurrentPassword,user.Password)) {
-                    user.Password = await this.EncryptPasswordAsync(model.NewPassword);
-                    await this.m_userRepository.UpdateAsync(user);
-                } else {
-                    throw new Exception("Incorrect password.");
-                }
-            } else {
+            if(string.IsNullOrWhiteSpace(model.CurrentPassword) && string.IsNullOrWhiteSpace(model.NewPassword))
                 throw new Exception("Password is empty.");
-            }
+
+            var user = await this.m_userRepository.GetByIdAsync(model.Id);
+
+            if(user == null) throw new Exception("User not found.");
+
+            if(!BcryptHash.CheckBcryptPassword(model.CurrentPassword, user.Password))
+                throw new Exception("Incorrect password.");
+
+            user.Password = await this.EncryptPasswordAsync(model.NewPassword);
+            await this.m_userRepository.UpdateAsync(user);
+
         }
 
         #endregion
 
         #region private methods
 
-        private bool ValidatePassword(string pass) {
-            return !string.IsNullOrWhiteSpace(pass);
-        }
         private async Task<SymmetricSecurityKey> GetSymmetricSecurityKeyAsync() {
             return await Task.Run(() => new SymmetricSecurityKey(Encoding.UTF8.GetBytes(this.Settings.Key)));
         }
 
         private async Task<string> TokenAsync(LoginUserDTO model, bool reg) {
             var identity = await this.GetIdentityAsync(model, reg);
-            if (identity == null) throw new Exception("Invalid login or password.");
+            if(identity == null) throw new Exception("Invalid login or password.");
 
             var now = DateTime.UtcNow;
             var jwt = new JwtSecurityToken(
@@ -84,17 +80,18 @@ namespace ClothingStore.Service.Services {
             var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
 
             var response = new {
-                acces_token = encodedJwt,
+                access_token = encodedJwt,
                 username = identity.Claims.FirstOrDefault(i => i.Type == "Login")?.Value,
-                role = identity.Claims.FirstOrDefault(i => i.Type == "Role")?.Value
+                role = identity.Claims.FirstOrDefault(i => i.Type == "Role")?.Value,
+                id = long.Parse(identity.Claims.FirstOrDefault(i=> i.Type == "Id")?.Value)
             };
 
             return JsonConvert.SerializeObject(response, new JsonSerializerSettings { Formatting = Formatting.Indented });
         }
 
         private async Task<ClaimsIdentity> GetIdentityAsync(LoginUserDTO model, bool reg) {
-            var user = new User();
-            user.Role = UserRoles.User;
+            var user = new User { Role = UserRoles.User };
+
             if(!reg) {
                 var res = await this.m_userRepository.GetAllAsync(new List<Expression<Func<User, bool>>> { u => u.Login == model.Login });
                 user = await res.FirstOrDefaultAsync();
@@ -104,19 +101,18 @@ namespace ClothingStore.Service.Services {
                 if(!reg) throw new Exception("Incorrect password.");
             }
 
-            if(reg) {
-                var claims = new List<Claim> {
-                    new Claim("Login", model.Login),
-                    new Claim("Role", user.Role.ToString())
-                };
-                var claimsIdentity = new ClaimsIdentity(claims,
-                    "TokenAsync",
-                    ClaimsIdentity.DefaultNameClaimType,
-                    ClaimsIdentity.DefaultRoleClaimType);
-                return claimsIdentity;
-            }
+            var claims = new List<Claim> {
+                new Claim("Login", model.Login),
+                new Claim("Role", user.Role.ToString()),
+                new Claim("Id", user.Id.ToString())
+            };
 
-            return null;
+            var claimsIdentity = new ClaimsIdentity(claims,
+                "TokenAsync",
+                ClaimsIdentity.DefaultNameClaimType,
+                ClaimsIdentity.DefaultRoleClaimType);
+
+            return claimsIdentity;
         }
 
         #endregion
