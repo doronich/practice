@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using ClothingStore.Repository.Context;
 using ClothingStore.Repository.Interfaces;
 using ClothingStore.Repository.Repository;
-using ClothingStore.Service.Helpers;
 using ClothingStore.Service.Chat;
 using ClothingStore.Service.Interfaces;
 using ClothingStore.Service.Services;
@@ -26,7 +25,7 @@ namespace ClothingStore {
         public Startup(IHostingEnvironment env) {
             var builder = new ConfigurationBuilder()
                           .SetBasePath(env.ContentRootPath)
-                          .AddJsonFile("appsettings.json", true, true)
+                          .AddJsonFile("appsettings.json", false, true)
                           .AddJsonFile($"appsettings.{env.EnvironmentName}.json", true)
                           .AddEnvironmentVariables();
             this.Configuration = builder.Build();

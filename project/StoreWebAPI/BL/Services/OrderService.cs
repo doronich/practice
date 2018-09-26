@@ -76,11 +76,11 @@ namespace ClothingStore.Service.Services {
             var ordersquary = await this.Repository.GetAllAsync(includes: new[] { "User", "Code" });
 
             if (!ordersquary.Any()) throw new Exception("Orders not found");
-            var orders = ordersquary.ToList();
-            var result = orders.Select(o => new GetOrderDTO
+            //var orders = await ordersquary.ToListAsync();
+            var result = await ordersquary.Select(o => new GetOrderDTO
             {
                 Id = o.Id,
-                Username = o.User?.Login,
+                Username = o.User!=null? o.User.Login : null,
                 Name = o.Name,
                 Email = o.Email,
                 PhoneNumber = o.PhoneNumber,
@@ -93,11 +93,11 @@ namespace ClothingStore.Service.Services {
                         Code = o.Code.Code,
                         Discount = o.Code.Discount
                     }
-                    : null,
+                    : new GetCouponCodeDTO(),
                 Status = o.Status,
-                UserId = o.User?.Id,
+                UserId = o.User.Id,
                 CreatedDate = o.CreatedDate
-            }).ToList();
+            }).ToListAsync();
             return result;
         }
         public async Task<IList<GetOrderItemsDTO>> GetOrderItemsAsync(long id)
