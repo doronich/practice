@@ -18,10 +18,14 @@ namespace ClothingStore.Service.Services {
             this.m_security = securityService;
         }
 
-        public async Task<string> InsertUserAsync(RegisterUserDTO model) {
-            var ex = await this.Repository.ExistAsync(u => u.Login == model.Login) || await this.Repository.ExistAsync(e => e.Email == model.Email);
+        public async Task<bool> CheckLoginAndEmailForExistAsync(string email, string login) {
+            return await this.Repository.ExistAsync(u => Equals(u.Login,login) || Equals(u.Email, email));
+        }
 
-            if(ex) throw new Exception("Login or email already exists.");
+        public async Task<string> InsertUserAsync(RegisterUserDTO model) {
+            var exist = await this.CheckLoginAndEmailForExistAsync(model.Email, model.Login);
+
+            if(exist) throw new Exception("Login or email already exists.");
 
             var user = new User {
                 Login = model.Login,

@@ -21,5 +21,7 @@ namespace ClothingStore.Service.Interfaces {
         Task DeleteUserAsync(long id);
 
         Task<User> GetUserByIdAsync(long id);
+
+        Task<bool> CheckLoginAndEmailForExistAsync(string email, string login);
     }
 }

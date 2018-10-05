@@ -32,6 +32,21 @@ namespace ClothingStore.Controllers {
         }
 
         [AllowAnonymous]
+        [HttpPost("Check")]
+        [ValidateModel]
+        public async Task<IActionResult> CheckUser([FromBody] CheckUserDTO model)
+        {
+            try {
+                var userExist = await this.m_userService.CheckLoginAndEmailForExistAsync(model.Email, model.Login);
+                return this.Ok(userExist);
+            }
+            catch (Exception exception)
+            {
+                return this.BadRequest(exception.Message);
+            }
+        }
+
+        [AllowAnonymous]
         [HttpPost("Token")]
         [ValidateModel]
         public async Task<IActionResult> Token([FromBody] LoginUserDTO model) {
