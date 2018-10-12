@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using ClothingStore.Data.Entities.Categories;
 
 namespace ClothingStore.Data.Entities.item {
     public class Item : BaseEntity {
@@ -13,8 +14,8 @@ namespace ClothingStore.Data.Entities.item {
         public string ImagePath1 { get; set; }
         public string ImagePath2 { get; set; }
         public string ImagePath3 { get; set; }
-        public KindsOfItems Kind { get; set; }
-        public string Subkind { get; set; }
+        public Category Category { get; set; }
+        public SubCategory SubCategory { get; set; }
         public Statuses Status { get; set; }
         public string Size { get; set; }
         public int Amount { get; set; }

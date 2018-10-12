@@ -29,7 +29,7 @@ namespace ClothingStore.Service.Interfaces {
 
         Task<Item> GetItemById(long id);
 
-        Task<IList<string>> GetCategoriesAsync();
-        Task<IList<string>> GetSubCategoriesAsync();
+        //Task<IList<string>> GetCategoriesAsync();
+        //Task<IList<string>> GetSubCategoriesAsync();
     }
 }

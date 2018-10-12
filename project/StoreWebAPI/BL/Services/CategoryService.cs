@@ -70,14 +70,42 @@ namespace ClothingStore.Service.Services {
             await this.m_subRepository.DeleteAsync(subCat);
         }
 
-        public async Task<IList<Category>> GetCategoriesAsync() {
-            var result = await (await this.m_catRepository.GetAllAsync()).ToListAsync();
+        public async Task<IList<CategoryDTO>> GetCategoriesAsync() {
+            var result = await (await this.m_catRepository.GetAllAsync()).Select(c =>
+                new CategoryDTO() {
+                    Id = c.Id,
+                    Name = c.Name,
+                    Active = c.Active,
+                    RusName = c.RusName
+                }
+            ).ToListAsync();
             return result;
         }
 
-        public async Task<IList<SubCategory>> GetSubCategoriesAsync(long catId) {
+        public async Task<IList<SubCategoryDTO>> GetSubCategoriesAsync(long catId) {
             var result = await (await this.m_subRepository.GetAllAsync(new List<Expression<Func<SubCategory, bool>>> { c => c.CategoryId == catId }))
-                .ToListAsync();
+                                .Select(s=>new SubCategoryDTO() {
+                                    Id = s.Id,
+                                   Name = s.Name,
+                                   RusName = s.RusName,
+                                   Active = s.Active,
+                                   CategoryId = s.CategoryId
+                               })
+                                .ToListAsync();
+            return result;
+        }
+
+        public async Task<IList<SubCategoryDTO>> GetAllSubCategoriesAsync() {
+            var result = await (await this.m_subRepository.GetAllAsync())
+                               .Select(s => new SubCategoryDTO()
+                               {
+                                   Id = s.Id,
+                                   Name = s.Name,
+                                   RusName = s.RusName,
+                                   Active = s.Active,
+                                   CategoryId = s.CategoryId
+                               })
+                               .ToListAsync();
             return result;
         }
     }

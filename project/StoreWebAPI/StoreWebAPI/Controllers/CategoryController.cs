@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using ClothingStore.Filters;
 using ClothingStore.Service.Interfaces;
 using ClothingStore.Service.Models.Categories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ClothingStore.Controllers {
@@ -10,10 +11,9 @@ namespace ClothingStore.Controllers {
     [ApiController]
     public class CategoryController : ControllerBase {
         private readonly ICategoryService m_categoryService;
-        private readonly IItemService m_itemService;
 
-        public CategoryController(IItemService itemService, ICategoryService categoryService) {
-            this.m_itemService = itemService;
+
+        public CategoryController(ICategoryService categoryService) {
             this.m_categoryService = categoryService;
         }
 
@@ -37,7 +37,18 @@ namespace ClothingStore.Controllers {
             }
         }
 
+        [HttpGet("sub")]
+        public async Task<IActionResult> GetAllSubCategories() {
+            try {
+                var result = await this.m_categoryService.GetAllSubCategoriesAsync();
+                return this.Ok(result);
+            } catch(Exception exception) {
+                return this.BadRequest(exception.Message);
+            }
+        }
+
         [HttpPost]
+        [Authorize(Policy = "Admin")]
         [ValidateModel]
         public async Task<IActionResult> CreateCategory(CreateCategoryDTO category) {
             try {
@@ -49,6 +60,7 @@ namespace ClothingStore.Controllers {
         }
 
         [HttpPost("sub")]
+        [Authorize(Policy = "Admin")]
         [ValidateModel]
         public async Task<IActionResult> CreateSubCategory(CreateSubCategoryDTO category) {
             try {
