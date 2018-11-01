@@ -163,7 +163,7 @@ namespace ClothingStore.Service.Services {
 
             order.Address = model.Address;
             order.Name = model.Name;
-            order.Status = model.Status;
+            order.Status = (int)model.Status<5?model.Status:order.Status;
             order.PhoneNumber = model.PhoneNumber;
             order.UpdatedBy = this.HttpContext.User.Claims.FirstOrDefault()?.Value;
 
