@@ -36,8 +36,9 @@ namespace ClothingStore {
         public void ConfigureServices(IServiceCollection services) {
             services.AddOptions();
             //DB
+            string connectionString = string.Format(this.Configuration.GetConnectionString("DefaultConnection"), Environment.CurrentDirectory);
             services.AddDbContext<ApplicationContext>(
-                options => options.UseSqlServer(this.Configuration.GetConnectionString("DefaultConnection"))
+                options => options.UseSqlServer(connectionString)
             );
             //Services
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
