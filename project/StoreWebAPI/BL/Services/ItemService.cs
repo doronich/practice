@@ -247,6 +247,17 @@ namespace ClothingStore.Service.Services {
 
             return res;
         }
+
+        public async Task<IList<ItemForAdmin>> AllItemsForAdminAsync() {
+            var list = await (await this.Repository.GetAllAsync()).Select(i => new ItemForAdmin()
+            {
+                Id = i.Id,
+                Name = i.Name,
+                Active = i.Active,
+                Price = i.Price
+            }).ToListAsync();
+            return list;
+        }
         #endregion
 
         public async Task InsertItemAsync(CreateItemDTO model) {
@@ -267,6 +278,7 @@ namespace ClothingStore.Service.Services {
                 Size = model.Size.ToLower(),
                 Status = model.Status,
                 SubCategoryId = model.Subkind,
+                
                 PreviewImagePath = string.IsNullOrEmpty(model.PreviewImagePath)
                     ? "../ImageStore/default.png"
                     : await this.m_imageService.GetImagePathAsync(model.PreviewImagePath)

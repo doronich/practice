@@ -29,6 +29,8 @@ namespace ClothingStore.Service.Interfaces {
 
         Task<Item> GetItemById(long id);
 
+        Task<IList<ItemForAdmin>> AllItemsForAdminAsync();
+
         //Task<IList<string>> GetCategoriesAsync();
         //Task<IList<string>> GetSubCategoriesAsync();
     }
