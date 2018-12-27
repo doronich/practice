@@ -5,6 +5,7 @@ using ClothingStore.Data.Entities;
 using ClothingStore.Data.Entities.Categories;
 using ClothingStore.Data.Entities.item;
 using ClothingStore.Data.Entities.Order;
+using ClothingStore.Data.Entities.User;
 using Microsoft.EntityFrameworkCore;
 
 namespace ClothingStore.Repository.Context {

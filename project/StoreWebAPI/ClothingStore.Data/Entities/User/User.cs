@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ClothingStore.Data.Entities {
+namespace ClothingStore.Data.Entities.User {
     public class User : BaseEntity {
         [Required]
         [StringLength(20, MinimumLength = 5)]

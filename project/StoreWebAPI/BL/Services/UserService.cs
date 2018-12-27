@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ClothingStore.Data.Entities;
+using ClothingStore.Data.Entities.User;
 using ClothingStore.Repository.Interfaces;
 using ClothingStore.Service.Interfaces;
 using ClothingStore.Service.Models;

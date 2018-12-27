@@ -1,5 +1,5 @@
 ﻿using System;
-using ClothingStore.Data.Entities;
+using ClothingStore.Data.Entities.User;
 
 namespace ClothingStore.Service.Models {
     public class GetUserDTO {

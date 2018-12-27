@@ -16,7 +16,7 @@ using Microsoft.AspNetCore.Http;
 namespace ClothingStore.Service.Services {
     public class ItemService : BaseService<Item>,IItemService {
         private readonly IImageService m_imageService;
- 
+        private const string DEFAULT_IMAGE_PATH_S = "../ImageStore/default.png";
 
         public ItemService(IRepository<Item> repository,
                            IImageService imageService,
@@ -280,12 +280,12 @@ namespace ClothingStore.Service.Services {
                 SubCategoryId = model.Subkind,
                 
                 PreviewImagePath = string.IsNullOrEmpty(model.PreviewImagePath)
-                    ? "../ImageStore/default.png"
+                    ? DEFAULT_IMAGE_PATH_S
                     : await this.m_imageService.GetImagePathAsync(model.PreviewImagePath)
             };
 
             item.MinPreviewImagePath = string.IsNullOrEmpty(model.PreviewImagePath)
-                ? "../ImageStore/default.png"
+                ? DEFAULT_IMAGE_PATH_S
                 : await this.m_imageService.GetMinImagePathAsync(item.PreviewImagePath);
             item.ImagePath1 = string.IsNullOrEmpty(model.ImagePath1) ? string.Empty : await this.m_imageService.GetImagePathAsync(model.ImagePath1);
             item.ImagePath2 = string.IsNullOrEmpty(model.ImagePath2) ? string.Empty : await this.m_imageService.GetImagePathAsync(model.ImagePath2);

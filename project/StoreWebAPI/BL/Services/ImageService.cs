@@ -8,12 +8,13 @@ using SixLabors.ImageSharp.Processing;
 
 namespace ClothingStore.Service.Services {
     public class ImageService : IImageService {
+        private const string PATH_S = "../ImageStore/";
         public async Task<string> GetImagePathAsync(string image) {
             var type = GetTypeOfImage(image);
             
             var base64Str = image.Substring(image.IndexOf(',') + 1);
             var bytes = Convert.FromBase64String(base64Str);
-            var name = "../ImageStore/" + DateTime.UtcNow.ToString("yyyyMMddhhmmss") +"R" + new Random().Next(1000)+ "." + type;
+            var name = PATH_S + DateTime.UtcNow.ToString("yyyyMMddhhmmss") +"R" + new Random().Next(1000)+ "." + type;
 
             await File.WriteAllBytesAsync(name, bytes);
 
@@ -29,7 +30,7 @@ namespace ClothingStore.Service.Services {
                         var w = Convert.ToInt32(image.Width / 2.5);
                         var h = Convert.ToInt32(image.Height / 2.5);
                         image.Mutate(x => x.Resize(w, h));
-                        fileName = "../ImageStore/" + prefix + DateTime.UtcNow.ToString("yyyyMMddhhmmss") + "R" + new Random().Next(1000) + "." + type;
+                        fileName = PATH_S + prefix + DateTime.UtcNow.ToString("yyyyMMddhhmmss") + "R" + new Random().Next(1000) + "." + type;
                         image.Save(fileName);
                     }
                 }
@@ -54,7 +55,7 @@ namespace ClothingStore.Service.Services {
         }
 
         public void DeleteImage(string path) {            
-            if(path != "../ImageStore/default.png" && !string.IsNullOrEmpty(path)) File.Delete(path);
+            if(path != PATH_S+"default.png" && !string.IsNullOrEmpty(path)) File.Delete(path);
         }
 
         private static string GetTypeOfImage(string image) {

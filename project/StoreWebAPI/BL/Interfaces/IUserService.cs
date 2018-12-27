@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using ClothingStore.Data.Entities;
+using ClothingStore.Data.Entities.User;
 using ClothingStore.Service.Models;
 using ClothingStore.Service.Models.User;
 

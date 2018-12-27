@@ -7,6 +7,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using ClothingStore.Data.Entities;
+using ClothingStore.Data.Entities.User;
 using ClothingStore.Repository.Interfaces;
 using ClothingStore.Service.Helpers;
 using ClothingStore.Service.Interfaces;

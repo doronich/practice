@@ -6,6 +6,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using ClothingStore.Data.Entities;
 using ClothingStore.Data.Entities.Order;
+using ClothingStore.Data.Entities.User;
 using ClothingStore.Repository.Interfaces;
 using ClothingStore.Service.Interfaces;
 using ClothingStore.Service.Models.CouponCode;
