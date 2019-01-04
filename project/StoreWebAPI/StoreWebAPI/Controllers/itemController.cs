@@ -57,7 +57,7 @@ namespace ClothingStore.Controllers {
         // GET: api/item/q?
         [AllowAnonymous]
         [HttpGet("q")]
-        [ResponseCache(Duration = 10)]
+        //[ResponseCache(Duration = 10)]
         [ValidateModel]
         public async Task<IActionResult> GetBy([FromQuery]ReqItemDTO item) {
             try {

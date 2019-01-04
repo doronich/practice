@@ -4,6 +4,6 @@
         Execution,
         Paid,
         Canceled,
-        Complited
+        Completed
     }
 }
