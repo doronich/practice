@@ -27,6 +27,18 @@ namespace ClothingStore.Controllers {
                 return this.BadRequest(exception.Message);
             }
         }
+        [HttpGet("admin/all")]
+        [Authorize(Policy = "Admin")]
+        public async Task<IActionResult> AllItems() {
+            try{
+                var items = await this.m_itemService.AllItemsForAdminAsync();
+                return this.Ok(items);
+            }
+            catch (Exception exception)
+            {
+                return this.BadRequest(exception.Message);
+            }
+        }
 
         //GET: api/item/cart
         [AllowAnonymous]

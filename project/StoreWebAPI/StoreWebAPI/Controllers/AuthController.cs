@@ -62,6 +62,9 @@ namespace ClothingStore.Controllers {
         [HttpPost("ChangePassword")]
         [ValidateModel]
         public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDTO model) {
+            if(this.User.Claims.FirstOrDefault(c => c.Type == "Id")?.Value != model.Id.ToString()) {
+                return this.Forbid();
+            }
             try {
                 await this.m_securityService.ChangePasswordAsync(model);
                 return this.Ok();

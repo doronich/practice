@@ -79,11 +79,17 @@ namespace ClothingStore.Service.Services {
 
             var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
 
+            var id = long.Parse(identity.Claims.FirstOrDefault(i => i.Type == "Id")?.Value);
+            var username = identity.Claims.FirstOrDefault(i => i.Type == "Login")?.Value;
+            if (id == 0){
+                id = (await (await this.m_userRepository.GetAllAsync(new List<Expression<Func<User, bool>>>() { u => u.Login == username }))
+                                    .FirstOrDefaultAsync()).Id;
+            }
             var response = new {
                 access_token = encodedJwt,
-                username = identity.Claims.FirstOrDefault(i => i.Type == "Login")?.Value,
+                username = username,
                 role = identity.Claims.FirstOrDefault(i => i.Type == "Role")?.Value,
-                id = long.Parse(identity.Claims.FirstOrDefault(i=> i.Type == "Id")?.Value)
+                id = id
             };
 
             return JsonConvert.SerializeObject(response, new JsonSerializerSettings { Formatting = Formatting.Indented });

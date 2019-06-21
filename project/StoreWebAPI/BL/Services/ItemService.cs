@@ -26,16 +26,16 @@ namespace ClothingStore.Service.Services {
 
         #region GET methods
 
-        public async Task<IList<string>> GetCategoriesAsync() {
-            var categories = await (await this.Repository.GetAllAsync()).Select(i => i.Kind.ToString()).Distinct().ToListAsync();
-            return categories;
-        }
+        //public async Task<IList<string>> GetCategoriesAsync() {
+        //    var categories = await (await this.Repository.GetAllAsync()).Select(i => i.Category.ToString()).Distinct().ToListAsync();
+        //    return categories;
+        //}
 
-        public async Task<IList<string>> GetSubCategoriesAsync()
-        {
-            var subCategories = await (await this.Repository.GetAllAsync()).Select(i => i.Subkind).Distinct().ToListAsync();
-            return subCategories;
-        }
+        //public async Task<IList<string>> GetSubCategoriesAsync()
+        //{
+        //    var subCategories = await (await this.Repository.GetAllAsync()).Select(i => i.SubCategory).Distinct().ToListAsync();
+        //    return subCategories;
+        //}
 
         public async Task<Item> GetItemAsync(long id)
         {
@@ -86,33 +86,17 @@ namespace ClothingStore.Service.Services {
                 expressionsList.Add(expSize);
             }
 
-            if (item.Subkind != null)
-            {
-                Expression<Func<Item, bool>> expSubkind = i => string.Equals(i.Subkind, item.Subkind, StringComparison.CurrentCultureIgnoreCase);
-                expressionsList.Add(expSubkind);
-            }
 
             if (item.Kind != null)
             {
-                KindsOfItems kind;
-                switch (item.Kind.ToLower())
-                {
-                    case "1":
-                        kind = KindsOfItems.Footwear;
-                        break;
-                    case "2":
-                        kind = KindsOfItems.Clothing;
-                        break;
-                    case "3":
-                        kind = KindsOfItems.Accessories;
-                        break;
-                    default:
-                        kind = KindsOfItems.Other;
-                        break;
-                }
-
-                Expression<Func<Item, bool>> expKind = i => i.Kind == kind;
+                Expression<Func<Item, bool>> expKind = i => i.CategoryId == item.Kind;
                 expressionsList.Add(expKind);
+            }
+
+            if (item.Subkind != null)
+            {
+                Expression<Func<Item, bool>> expSubkind = i => i.SubCategoryId == item.Subkind;
+                expressionsList.Add(expSubkind);
             }
 
             if (item.Status != null)
@@ -263,6 +247,17 @@ namespace ClothingStore.Service.Services {
 
             return res;
         }
+
+        public async Task<IList<ItemForAdmin>> AllItemsForAdminAsync() {
+            var list = await (await this.Repository.GetAllAsync()).Select(i => new ItemForAdmin()
+            {
+                Id = i.Id,
+                Name = i.Name,
+                Active = i.Active,
+                Price = i.Price
+            }).ToListAsync();
+            return list;
+        }
         #endregion
 
         public async Task InsertItemAsync(CreateItemDTO model) {
@@ -276,13 +271,14 @@ namespace ClothingStore.Service.Services {
                 Color = model.Color.ToLower(),
                 Description = model.Description,
                 Discount = model.Discount,
-                Kind = model.Kind,
+                CategoryId = model.Kind,
                 Name = model.Name,
                 Price = model.Price,
                 Sex = model.Sex,
                 Size = model.Size.ToLower(),
                 Status = model.Status,
-                Subkind = model.Subkind.ToLower(),
+                SubCategoryId = model.Subkind,
+                
                 PreviewImagePath = string.IsNullOrEmpty(model.PreviewImagePath)
                     ? "../ImageStore/default.png"
                     : await this.m_imageService.GetImagePathAsync(model.PreviewImagePath)
@@ -331,13 +327,13 @@ namespace ClothingStore.Service.Services {
             item.ImagePath3 = string.IsNullOrEmpty(model.ImagePath3)
                 ? item.ImagePath3
                 : await NewImage(item.ImagePath3, model.ImagePath3);
-            item.Kind = model.Kind;
+            item.CategoryId = model.Kind;
             item.Name = model.Name;
             item.Price = model.Price;
             item.Sex = model.Sex;
             item.Size = model.Size.ToLower();
             item.Status = model.Status;
-            item.Subkind = model.Subkind.ToLower();
+            item.SubCategoryId = model.Subkind;
             item.UpdatedBy = updatedBy;
 
             await this.Repository.UpdateAsync(item);

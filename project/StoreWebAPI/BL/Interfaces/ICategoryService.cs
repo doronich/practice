@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using ClothingStore.Data.Entities.Categories;
 using ClothingStore.Service.Models.Categories;
 
 namespace ClothingStore.Service.Interfaces
@@ -12,7 +9,9 @@ namespace ClothingStore.Service.Interfaces
         Task CreateSubCategoryAsync(CreateSubCategoryDTO category);
         Task RemoveCategoryAsync(long id);
         Task RemoveSubCategoryAsync(long id);
-        Task<IList<Category>> GetCategoriesAsync();
-        Task<IList<SubCategory>> GetSubCategoriesAsync(long catId);
+        Task<IList<CategoryDTO>> GetCategoriesAsync();
+        Task<IList<SubCategoryDTO>> GetSubCategoriesAsync(long catId);
+
+        Task<IList<SubCategoryDTO>> GetAllSubCategoriesAsync();
     }
 }
