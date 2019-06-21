@@ -2,42 +2,11 @@
 project/StoreWebAPI/ImageStore/*
 project/StoreWebAPI/.vs/
 
-# User-specific files
-*.suo
+bin/
+obj/
+.vs/
+.idea/
+packages/
 *.user
-*.userosscache
-*.sln.docstates
-
-# User-specific files (MonoDevelop/Xamarin Studio)
-*.userprefs
-
-# Build results
-project/StoreWebAPI/[Dd]ebug/
-project/StoreWebAPI/[Dd]ebugPublic/
-project/StoreWebAPI/[Rr]elease/
-project/StoreWebAPI/[Rr]eleases/
-project/StoreWebAPI/x64/
-project/StoreWebAPI/x86/
-project/StoreWebAPI/bld/
-project/StoreWebAPI/[Bb]in/
-project/StoreWebAPI/[Oo]bj/
-project/StoreWebAPI/[Ll]og/
-
-# Visual Studio 2015 cache/options directory
-project/StoreWebAPI/.vs/
-
-
-project/StoreWebAPI/StoreWebAPI/obj/
-project/StoreWebAPI/StoreWebAPI/bin/
-
-project/StoreWebAPI/DAL/obj/
-project/StoreWebAPI/DAL/bin/
-
-project/StoreWebAPI/BL/obj/
-project/StoreWebAPI/BL/bin/
-
-project/StoreWebAPI/Tests/obj/
-project/StoreWebAPI/Tests/bin/
-
-project/StoreWebAPI/ClothingStore.Data/obj/
-project/StoreWebAPI/ClothingStore.Data/bin/
+*.suo
+*.cs.orig
